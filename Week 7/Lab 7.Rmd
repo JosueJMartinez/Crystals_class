@@ -1,0 +1,204 @@
+---
+title: "Lab 7"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Chapter 10: Correlation and Regression
+This section presents methods for determining whether there is a correlation or association between two variables. If there is a correlation, an equation of a straight line that best fits the data can be identified. This equation can then be used to predict the value of one variable given the value of the other variable. It should be noted that while we can find a regression line for any set of data, only data with a linear correlation will give meaningful results.
+
+## 10-1: Correlations
+
+There is a correlation between two variables when the values of one variable are associated with values of the other variable in some way. A linear correlation exists between two variables when there is a correlation and the plotted points of paired data result in a pattern that can be approximated by a straight line.
+The linear correlation coefficient r between two variables is given by the formula
+
+The formula for the correlation coefficient \( r \) is:
+
+\[
+r = \frac{n \left( \sum xy \right) - \left( \sum x \right) \left( \sum y \right)}{\sqrt{n \left( \sum x^2 \right) - \left( \sum x \right)^2} \cdot \sqrt{n \left( \sum y^2 \right) - \left( \sum y \right)^2}}
+\]
+
+The R command for the linear correlation coefficient is given by 
+
+<span style="color:red">cor(Variable1, Variable2)</span>
+
+The R command for testing for the significance of the Pearson Product Moment correlation between two variables is given 
+
+<span style="color:red">cor.test(Variable1, Variable2)</span>
+
+**Example 1**
+
+Use technology to find the value of the linear correlation coefficient r for the white/red blood cell counts listed in Table 10-1 and shown below.
+
+|       | Value 1 | Value 2 | Value 3 | Value 4 | Value 5 | Value 6 | Value 7 | Value 8 | Value 9 | Value 10 |
+|-------|---------|---------|---------|---------|---------|---------|---------|---------|---------|----------|
+| White | 8.7     | 6.9     | 8.1     | 8.0     | 6.9     | 8.1     | 6.4     | 6.3     | 10.9    | 4.8      |
+| Red   | 4.8     | 4.47    | 4.6     | 4.09    | 4.15    | 5.22    | 4.22    | 4.3     | 6.34    | 3.54     |
+
+**Solution**
+
+```{r}
+White <- c(8.7, 6.9, 8.1, 8.0, 6.9, 8.1, 6.4, 6.3, 10.9, 4.8)
+Red <- c(4.8, 4.47, 4.6, 4.09, 4.15, 5.22, 4.22, 4.3, 6.34, 3.54)
+cor(White, Red)
+
+```
+**Example 2**
+
+Table 10-4 lists paired data consisting of per capita consumption of margarine (pounds) in the United States and the divorce rate in Maine (divorces per 1000 people in Maine). Each pair of data is from a different year. The data are from the U.S. Census Bureau and the U.S. Department of Agriculture. Is there a linear correlation? What do you conclude?
+
+**Solution**
+```{r}
+Margarine <- c(8.2, 7.0, 6.5, 5.3, 5.2, 4.0, 4.6, 4.5, 4.2, 3.7)
+Divorces <- c(5.0, 4.7, 4.6, 4.4, 4.3, 4.1, 4.2, 4.2, 4.2, 4.1)
+plot(Margarine, Divorces)
+cor.test(Margarine, Divorces)
+```
+
+## 10-2: Regression
+
+The regression line of a collection of paired sample data is the straight line that best fits the scatterplot of the data. The regression line is described by the regression equation
+
+\(\hat{y} = b_0 + b_1x\)
+
+Where x is the explanatory or independent variable and y is the response or dependent variable. The R command for finding the regression equation is
+
+<span style="color:red">model <- lm(y ~ x)</span>
+
+If the data is not attached earlier, we need to reference it as follows
+
+<span style="color:red">model <- lm(y ~ x,  data = )</span>
+
+To obtain the output, we use the summary function as follows:
+
+<span style="color:red">summary(model)</span>
+
+To find the predicted value of an explanatory variable x0, we use the following function:
+
+<span style="color:red">predict(model_name, data.frame(x = xo))</span>
+
+**Example 1**
+
+Table 10-5 lists heights (in.) of fathers and their daughters from Data Set 10 “Family Heights” in Appendix B. If we use the methods of Section 10-1, we find that the linear correlation coefficient for the father/daughter height is r = 0.833 and the p-value is 0.003., so there appears to be a linear correlation between the height of fathers and daughters. Use technology to find the equation of the regression line in which the explanatory variable (or x variable) is the height of the father and the response variable (or y variable) is the corresponding height of the daughter.
+
+| Father   | 68.0 | 72.7 | 72.0 | 73.0 | 71.0 | 70.5 | 69.0 | 68.7 | 70.0 | 68.0 |
+|----------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|
+| Daughter | 65.0 | 70.0 | 68.5 | 66.5 | 67.0 | 65.5 | 63.5 | 61.7 | 63.7 | 60.0 |
+
+
+**Solution**
+
+```{r}
+Father <- c(68, 72.7, 72, 73, 71, 70.5, 69, 68.7, 70, 68)
+Daughter <- c(65, 70, 68.5, 66.5, 67, 65.5, 63.5, 61.7, 63.7, 60)
+plot(Father, Daughter)
+cor.test(Father, Daughter)
+
+Reg1 <- lm(Daughter ~ Father)
+summary(Reg1)
+
+```
+
+## 10-3: Prediction Intervals and Variation
+
+A prediction interval is a range of values used to estimate a variable such as a predicted value of y in a regression equation. The R command for finding the prediction interval is
+
+<span style="color:red">predict(model, data.frame(x = x0), interval = "prediction")</span>
+
+where x0 is the x value we are using to predict the corresponding y value.
+A confidence interval is a range of values used to estimate a population parameter. The R command for finding the confidence interval is 
+
+<span style="color:red">predict(model, data.frame(x = x0), interval = "confidence")</span>
+
+**Example 1**
+
+For the paired father/daughter heights listed in Table 10-5 in section 10-2, there is sufficient evidence to support the claim of a linear correlation between those two variables, and we found that the regression equation is \(\hat{y}\) =-30.3+1.36x. We also found that if a father’s height  x = 69.5 in., the predicted daughter’s height is 64.2 in. Use the father’s height of 69.5 in. to construct a 95% prediction interval for the daughter’s height.
+```{r}
+Father <- c(68, 72.7, 72, 73, 71, 70.5, 69, 68.7, 70, 68)
+Daughter <- c(65, 70, 68.5, 66.5, 67, 65.5, 63.5, 61.7, 63.7, 60)
+Reg8 <- lm(Daughter ~ Father)
+predict(Reg8, data.frame(Father = 69.5), interval = "prediction")
+
+```
+## 10-4: Multiple Regression
+
+A multiple regression equation expresses a linear relationship between a response variable y and two or more predictor variables \((x_1, x_2, \dots, x_k)\). The general form of a multiple regression equation obtained from the sample data is 
+
+\(\hat{y} = b_0 + b_1 x_1 + b_2 x_2 + \dots + b_k x_k\)
+
+
+The R command for finding the multiple linear regression equation is
+
+<span style="color:red">model <- lm(y ~ x_1+x_2+⋯+x_k,data= )</span>
+
+**Example 1**
+
+Data Set 1 “Body Data” in Appendix B includes heights (cm), waist circumference (cm), and weights (kg) from a sample of 153 males. Find the multiple regression equation in which the response variable (y) is the weight of a male and the predictor variables are height (x1) and waist circumference (x2).
+
+**Solution**
+
+```{r}
+#Weight_data <- read.csv(file.choose())
+#Weight_data1 <- subset(Weight_data, SEX..0.F. == 1)
+#mod1 <- lm(WEIGHT ~ HEIGHT + WAIST, data = Weight_data1)
+#summary(mod1)
+
+```
+
+## 10-5: Dummy Variables and Logistic Regression
+
+Logistic regression is a procedure used for finding a regression equation in which the response variable is a dummy variable. A simple logistic regression equation is given by the formula
+
+\[
+\ln\left(\frac{p}{1-p}\right) = b_0 + b_1 x
+\]
+where \( p \) is the probability that \( y = 1 \).
+
+The value of \( p \) for a specific value of \( y \) can then be found using the formula:
+
+\[
+p = \frac{e^y}{1 + e^y}
+\]
+
+The R command for finding the logistic regression equation is given by
+
+<span style="color:red">model <- glm(y ~ x,data=  ,family="binomial")</span>
+
+**Example 1**
+
+Use the paired height/sex data from Data Set 1 “Body Data” in Appendix B to find the simple logistic regression equation, and let the response variable (y) be sex with 0 = female and 1 = male. Then find the probability that a person with a height of 190 cm (or 74.8 in.) is a male.
+
+**Solution**
+```{r}
+#Body_Data <- read.csv(file.choose()) 
+#model1 <- glm(SEX..0.F. ~ HEIGHT, data = Body_Data, family = "binomial")
+#summary(model1)
+
+#predict.prob <- data.frame(HEIGHT = 190)
+#predict(model1, type = "response", newdata = predict.prob)
+
+```
+
+## Summary of R Commands
+### <span style="color:red">R command</span>	Task
+
+- <span style="color:red">cor(Variable1, Variable2)</span>
+	Provides the linear correlation coefficient between Variable1 and Variable2
+- <span style="color:red">cor.test(Variable1, Variable2)</span>
+	Tests for the significance of the Pearson Product Moment correlation between Variable1 and Variable2)
+- <span style="color:red">model <- lm(y ~ x,  data = )</span>
+	Provides the intercept term b0 and the regression coefficient b1 for an estimated simple linear regression equation of the form y ̂=b_0+b_1 x_1
+
+- <span style="color:red">predict(model, data.frame(x = x0), interval = "prediction")</span>
+	Gives the prediction interval for y given the value of x = x0
+- <span style="color:red">predict(model, data.frame(x = x0), interval = "confidence")</span>
+	Gives the confidence interval for y given the value of x = x0
+- <span style="color:red">model <- lm(y ~ x_1+x_2+⋯+x_k,data= )</span>
+	Provides the intercept term b_0 and the regression coefficients b1, b_0,b_1,…,b_k  k for an estimated multiple regression equation of the form y ̂=b_0+b_1 x_1+⋯+b_k x_k. 
+
+- <span style="color:red">model <- glm(y ~ x,data=  ,family="binomial")</span>
+	Provides the intercept term and the regression coefficients for an estimated logistic regression equation
+- <span style="color:red">Summary(model)</span>	Provides the output of the regression equation

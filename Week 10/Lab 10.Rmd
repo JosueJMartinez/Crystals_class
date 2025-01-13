@@ -1,0 +1,290 @@
+---
+title: "Lab 10"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Chapter 13: Nonparametric Tests
+
+Nonparametric tests or distribution-free tests are tests that are used for data that do not require that samples come from populations with normal distributions or any other particular distributions. 
+
+## 13-2: Sign Test
+
+The Sign Test is a nonparametric test that use positive and negative signs to test a claim about matched pairs, nominal data with two categories, or median of a single population. It is the nonparametric alternative of the matched pairs t-test.
+
+Let x = the number of times the less frequent sign occurs
+       n = the total number of positive and negative signs combined.
+
+If n≤25 , the test statistic is x.
+
+If n>25 , the test statistic is 
+
+\[
+z = \frac{(x + 0.5) - \frac{n}{2}}{\sqrt{\frac{n}{2}}}
+\]
+
+To perform the Sign Test in R,  we need to first install the Basic Statistical and Data Analysis, or BSDA package by typing the following R command:
+
+<span style="color:red">install.packages(“BSDA”)</span>
+
+The R command for the sign test is
+
+<span style="color:red">SIGN.test(Difference, md = 0, alternative =  , conf.level = )</span>
+
+Where Difference = difference between the groups.
+
+**Example 1**
+
+Listed in Table 13-2 are measured and reported weights (lb) of random male subjects (from Data Set 4 “Measured and Reported” in Appendix B). Use a 0.05 significance level to test the claim that for males, the differences “measured weight – reported weight” have a median equal to 0.
+
+| Measured | 220   | 268.7 | 213.4 | 201.3 | 107.1 | 172   | 187.4 | 132.5 | 122.1 | 151.9 |
+|----------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|
+| Reported | 220   | 267   | 210   | 204   | 107   | 176   | 187   | 135   | 122   | 150   |
+
+**Solution**
+
+```{r}
+#install.packages("BSDA")
+library(BSDA)
+Measured <- c(220, 268.7, 213.4, 201.3, 107.1, 172, 187.4, 132.5, 122.1, 151.9)
+Reported <- c(220, 267, 210, 204, 107, 176, 187, 135, 122, 150)
+Difference <- Measured - Reported
+Difference
+
+SIGN.test(Difference, md = 0, alternative = "two.sided", conf.level = 0.95)
+```
+
+## 13-3: Wilcoxon Signed-Ranks Tests for Matched Pairs
+
+The Wilcoxon Signed-Ranks Test is a nonparametric test that tests a population of matched pairs or a population that has a median equal to some claimed value. It is the nonparametric alternative of the two independent samples t-test. 
+
+Let T = the smaller of the sum of positive ranks of nonzero differences and the absolute value of the sum of the negative ranks of the nonzero differences. 
+
+       n = the total number of positive and negative signs combined.
+
+If n≤25 , the test statistic is T.
+
+If n>25 , the test statistic is \[
+z = \frac{T - \frac{n(n+1)}{4}}{\sqrt{\frac{n(n+1)(2n+1)}{24}}}
+\]
+
+The R command for the Wilcoxon Signed-Ranks Test is
+
+<span style="color:red">wilcox.test(Data1, Data2, paired=TRUE, correct =FALSE)</span>
+
+**Example 1**
+
+The first two rows of Table 13-3 include measured and reported weights from a simple random sample of eight different male subjects (from Data Set 4 “Measured and Reported” in Appendix B). The data are matched, so each measured weight is paired with the corresponding reported weight. Assume that we want to use the Wilcoxon signed-ranks test with a 0.05 significance level to test the claim that there is a significant difference between measured weights and reported weights of males. That is, assume that we want to test the null hypothesis that the matched pairs are from a population of matched pairs with differences having a median equal to zero.
+
+| Measured Weights | Reported Weights |
+|-------------------|------------------|
+| 152.6            | 150              |
+| 149.3            | 148              |
+| 174.8            | 170              |
+| 119.5            | 119              |
+| 194.9            | 185              |
+| 180.3            | 180              |
+| 215.4            | 224              |
+| 239.6            | 239              |
+
+**Solution**
+
+```{r}
+Measured_weights <- c(152.6, 149.3, 174.8, 119.5, 194.9, 180.3, 215.4, 239.6)
+Reported_weights <- c(150, 148, 170, 119, 185, 180, 224, 239)
+wilcox.test(Reported_weights, Measured_weights, paired = TRUE)
+```
+
+## 13-4: Wilcoxon Rank-Sum Test for Two Independent Samples
+
+The Wilcoxon Rank-Sum Test is a nonparametric test that uses ranks of sample data to test whether data from two independent samples come from populations with equal medians. It is also called the Mann-Whitney U test.
+
+The test statistic is given by:
+
+\[
+z = \frac{R - \mu_R}{\sigma_R}
+\]
+
+Where:
+
+\[
+\mu_R = \frac{n_1 (n_1 + n_2 + 1)}{2}
+\]
+
+\[
+\sigma_R = \sqrt{\frac{n_1 n_2 (n_1 + n_2 + 1)}{12}}
+\]
+
+Definitions:
+- \( n_1 \): Size of the sample from which the rank sum \( R \) is found.
+- \( n_2 \): Size of the other sample.
+- \( R \): Sum of ranks of the sample with size \( n_1 \).
+
+The R command for the Wilcoxon Rank-Sum Test is
+
+<span style="color:red">wilcox.test(Data1, Data2, paired=FALSE, correct =FALSE)</span>
+
+**Example 1**
+
+Table 13-4 lists samples of heights of males from the ANSUR I 1988 and ANSUR II 2012 data sets. Use a 0.05 significance level to test the claim that the two samples are from populations with the same median.
+
+| **ANSUR I 1988** | **ANSUR II 2012** |
+|------------------|-------------------|
+| 1698            | 1810             |
+| 1727            | 1850             |
+| 1734            | 1777             |
+| 1684            | 1811             |
+| 1667            | 1780             |
+| 1680            | 1733             |
+| 1785            | 1814             |
+| 1885            | 1861             |
+| 1841            | 1709             |
+| 1702            | 1740             |
+| 1738            | 1694             |
+| 1732            | 1766             |
+|                 | 1748             |
+|                 | 1794             |
+|                 | 1780             |
+
+
+**Solution**
+
+```{r}
+ANSUR_I <- c(1698, 1727, 1734, 1684, 1667, 1680, 1785, 1885, 1841, 1702, 1738, 1732)
+ANSUR_II <- c(1810, 1850, 1777, 1811, 1780, 1733, 1814, 1861, 1709, 1740, 1694, 1766, 1748, 1794, 1780)
+wilcox.test(ANSUR_I, ANSUR_II, paired = FALSE, correct = FALSE)
+```
+
+## 13-5: Kruskal-Wallis Test for Three or More Samples
+
+The Kruskal Wallis Test is a nonparametric test that is used when we want to test whether simple random samples from three or more independent populations have the same median. It is the nonparametric alternative of the One-Way ANOVA. The test statistic is given by the formula
+
+\[
+H = \frac{12}{N(N+1)} \left( \frac{R_1^2}{n_1} + \frac{R_2^2}{n_2} + \cdots + \frac{R_k^2}{n_k} \right) - 3(N+1)
+\]
+
+where N = total number of observations n all samples combined
+              k = number of different samples
+            R_1= sum of ranks for Sample 1
+            n_1= number of observations in Sample 1
+
+The R command for the Kruskal-Wallis Test is
+
+<span style="color:red">kruskal.test(Data)</span>
+
+where Data is the dataframe of all populations under consideration.
+
+**Example 1**
+
+Table 13-5 lists 18 of the sample values from Data Set 21 “Passive and Active Smoke” in Appendix B. Use a 0.05 significance level to test the claim that the three samples of cotinine levels in Table 13-5 come from populations with medians that are all equal.
+
+
+**Solution**
+
+```{r}
+Smokers <- c(362, 210, 400, 520, 360, NA, NA)
+ETS <- c(1.7, 0.029, 0.042, 28.7, 0.52, 0.011, NA)
+NOETS <- c(0.046, 0.124, 0.03, 0.011, 0.011, 0.055, 0.011)
+Cotinine_Levels <- data.frame(Smokers, ETS, NOETS)
+Cotinine_Levels
+
+kwTest <- kruskal.test(Cotinine_Levels)
+kwTest
+
+```
+
+## 13-6: Rank Correlation
+
+A rank correlation test, also known as the Spearman’s rank correlation test is a nonparametric test that uses the ranks of sample data consisting of matched pairs to test for the association of the two variables. The test statistic is
+
+\( r_s = \frac{n(\sum xy) - (\sum x)(\sum y)}{\sqrt{n(\sum x^2) - (\sum x)^2} \cdot \sqrt{n(\sum y^2) - (\sum y)^2}} \)
+
+
+The R command for the Spearman Rank Correlation is
+
+<span style="color:red">cor.test(Data1, Data2, method = “spearman”)</span>
+
+**Example 1**
+
+Consumer Reports tested blood pressure arm monitors. Listed in Table 13-6 are the ranks and costs of the models that were tested. A rank of 1 corresponds to the blood pressure arm monitor with the highest score. The ranks of 6 and 7  were tied, so the rank of 6.5 was assigned to each of them as shown in Table 13-6. Use a 0.05 significance level to test the claim that there is a correlation between rank and cost. Does it appear that more expensive monitors are better?
+
+| Quality Rank | 1   | 2  | 3  | 4  | 5  | 6  | 7  | 8  | 9  | 10 |
+|--------------|-----|----|----|----|----|----|----|----|----|----|
+| Cost ($)     | 81  | 50 | 75 | 70 | 52 | 37 | 50 | 75 | 40 | 29 |
+
+**Solution**
+```{r}
+Quality_Rank <- c(1,2,3,4,5,6,7,8,9,10)
+Cost <- c(81, 50, 75, 70, 52, 37, 50, 75, 40, 29)
+cor.test(Quality_Rank, Cost, method ="spearman")
+
+# To remove the warning message, add “exact =FALSE” to the code, as follows:
+cor.test(Quality_Rank, Cost, method = "spearman", exact = FALSE)
+
+```
+## Summary of R Commands
+### <span style="color:red">R command</span>	Task
+
+- <span style="color:red">install.packages(“BSDA”)</span>
+	Installs the Basic Statistical and Data Analysis Package needed to perform the test for Sign Test
+- <span style="color:red">SIGN.test(Difference, md = 0, alternative =  , conf.level = )</span>
+	Performs the Sign Test
+- <span style="color:red">wilcox.test(Data1, Data2, paired=TRUE, correct =FALSE)</span>
+	Performs the Wilcoxon Signed-Ranks Test
+- <span style="color:red">wilcox.test(Data1, Data2, paired=FALSE, 
+correct =FALSE)</span>	Performs the Wilcoxon Ranks-Sum Test (or the Mann-Whitney U Test)
+- <span style="color:red">kruskal.test(Data)</span>	Performs the Kruskal-Wallis Test
+- <span style="color:red">cor.test(Data1, Data2, method = “spearman”)</span>
+	Performs the Spearman’s Rank Correlation Test
+
+
+# Chapter 14: Survival Analysis
+
+## 14-2: Kaplan-Meier Survival Analysis
+
+The Kaplan-Meier method is used to describe survival behavior for specific events. It is based on varying survival time intervals for the terminating event being analyzed.
+
+Here are the R codes for obtaining both the table and the Kaplan-Meier survival curve:
+
+#  Use the Survival package (this comes with the base R, no need to install)
+
+<span style="color:red">library(survival)</span>
+
+<span style="color:red">model <- survfit(Surv(Time, Censoring_Variable) ~1, type = "kaplan-meier")</span>
+
+<span style="color:red">summary(model) # This produces the survival table
+
+# Plot the Kaplan-Meier Survival Curve
+
+<span style="color:red">plot(model, conf.int = FALSE, xlab = "time ", ylab = "percentage alive, S(t)", main = "Kaplan-Meier Survival Curve")</span>
+
+# Put tick marks where there is a censored observation.
+
+<span style="color:red">plot(model1, conf.int = FALSE, xlab = "time ", ylab = "percentage alive, S(t)", main = "Kaplan-Meier Survival Curve", mark.time = TRUE)</span>
+
+#Include Confidence Interval
+<span style="color:red">plot(model1, conf.int = TRUE, xlab = "time ", ylab = "percentage alive, S(t)", main = "Kaplan-Meier Survival Curve", mark.time = TRUE)</span>
+
+**Example 1**
+
+```{r}
+Day <- c(2, 4, 5, 8, 9, 12, 14, 22, 24, 28 )
+Status <- c(1, 1, 0, 1, 1, 0, 1, 1, 0, 0)
+Data1 <- data.frame(Day, Status)
+library(survival)
+model1 <- survfit(Surv(Day, Status) ~ 1, type = "kaplan-meier")
+summary(model1)
+plot(model1, conf.int = FALSE, xlab = "Day", ylab = "Cumulative Survival (Probability)")
+```
+
+## Summary of R Commands
+### <span style="color:red">R command</span>	Task
+
+- <span style="color:red">library(survival)</span> 	Invokes the library that we can use to perform the survival analysis. Note that this is included in the Base R, so we do not need to install it.
+- <span style="color:red">model <- survfit(Surv(Time, Censoring_Variable) ~1, type = "kaplan-meier")</span>	Performs the survival analysis on the Censoring Variable
+- <span style="color:red">summary(model)</span>	This gives the survival table
+- <span style="color:red">plot(model, conf.int = FALSE, xlab = "time ", 
+ylab = "percentage alive, S(t)", main = "Kaplan-Meier Survival Curve")</span>	Plots the Kaplan-Meier Survival Curve

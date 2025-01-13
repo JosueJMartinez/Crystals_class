@@ -1,0 +1,175 @@
+---
+title: "Lab 4"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Chapter 6: Normal Probability Distributions
+
+**6-1: The Standard Normal Distribution**
+
+A normal probability distribution is a continuous symmetric distribution for which the values of the variable are distributed in the shape of the bell curve. The probability density function of the normal distribution is given by the equation
+
+\[
+f(x) = \frac{1}{\sigma \sqrt{2\pi}} e^{-\frac{1}{2} \left( \frac{x-\mu}{\sigma} \right)^2}
+\]
+
+Where:
+- \( \mu \): Mean of the distribution.
+- \( \sigma \): Standard deviation of the distribution.
+
+---
+
+The **standard normal distribution** is a normal distribution with:
+- Mean (\( \mu = 0 \)),
+- Standard deviation (\( \sigma = 1 \)).
+
+Its probability density function is given by the equation:
+
+\[
+f(x) = \frac{1}{\sqrt{2\pi}} e^{-\frac{1}{2} x^2}
+\]
+
+The R command for the cumulative standard normal probability of Z for the standard normal distribution is 
+
+<span style="color:red">pnorm(z)</span>
+
+The R command for the value of Z that cuts off an area of α in the lower tail of the standard normal probability distribution is 
+
+<span style="color:red">qnorm(α)</span>
+
+**Example 1**
+
+The bone mineral density test can be helpful in identifying the presence or susceptibility to osteoporosis, a medical condition in which bones become more fragile and more likely to break. The result of a bone density test is commonly measured as a z score. A randomly selected adult undergoes a bone density test. Find the probability that this person has a bone density test score of less than 1.27.
+
+**Solution**
+```{r}
+pnorm(1.27)
+```
+Alternatively, we can use the “visualize” package to obtain the normal curve with the shaded area as part of the output. To do this, we first have to install the package.
+```{r}
+#install.packages("visualize")
+library(visualize)
+visualize.norm(1.27)
+```
+**Example 2**
+
+Find the bone density score corresponding to P95, the 95th percentile. That is, find the bone density score that separates the bottom 95% from the top 5%.
+**Solution**
+```{r}
+qnorm(0.95)
+```
+## 6-2: Real Applications of Normal Distributions
+
+The R command for the cumulative normal probability of x for the normal probability distribution with mean µ and standard deviation σ is 
+
+<span style="color:red">pnorm(x, µ, σ)</span>
+
+The R command for the value of x that cuts off an area of α in the lower tail of the normal probability distribution with mean µ and standard deviation σ is
+
+<span style="color:red">qnorm(α, µ, σ)</span>
+
+**Example 1**
+
+Assume that human body temperatures are normally distributed with:
+- A mean (\( \mu \)) of 98.20°F,
+- A standard deviation (\( \sigma \)) of 0.620°F.
+
+Find the percentage of temperatures greater than 99.00°F.
+
+**Solution**
+```{r}
+pnorm(99.0, mean=98.2, sd = 0.62, lower.tail = FALSE)
+
+#Alternative method using the visualize package
+visualize.norm(stat = 99.0,mu = 98.2, sd = 0.62, section = "upper")
+```
+**Example 2**
+
+Given the assumption that human body temperatures are normally distributed with a mean of 98.2° F and a standard deviation of 0.62° F, find the body temperature that separates the highest 1% from the lowest 99%; that is, find P99
+
+**Solution**
+
+```{r{}
+qnorm(.99, 98.5,.62) 
+```
+
+## 6-4: The Central Limit Theorem
+
+The **Central Limit Theorem** states that for all samples of the same size \( n \) with \( n > 30 \), the sampling distribution of \( \bar{x} \) can be approximated by a normal distribution with:
+
+- Mean: \( \mu \),
+- Standard deviation: \( \frac{\sigma}{\sqrt{n}} \).
+
+---
+
+### Test Statistic
+
+The test statistic is calculated using the formula:
+
+\[
+z = \frac{\bar{x} - \mu}{\frac{\sigma}{\sqrt{n}}}
+\]
+
+**Example 1**
+
+American Airlines uses Boeing 737 jets with 126 seats in the main cabin. In an attempt to create more room, an engineer is considering a reduction of the seat width from 16.6 in. to 16.0 in. Adult males have hip widths that are normally distributed with a mean of 14.3 in. and a standard deviation of 0.9 in.
+
+a.	Find the probability that a randomly selected adult male has a hip width greater than the seat width of 16.0 in.
+
+b.	Find the probability that 126 main cabin seats are all occupied by males with a mean hip width greater than the seat width of 16.0 in.
+
+**Solution**
+```{r}
+#a.
+mean_x <- 14.3
+sd_x <- 0.9
+z_value <- (16 - mean_x)/sd_x
+z_value
+
+#b.
+mean_all_males <- 14.3
+sd_all_males <- 0.9 / sqrt(126)
+
+z_value <- (16 - mean_all_males)/(sd_all_males)
+z_value
+        
+pnorm(z_value, lower.tail = FALSE)
+```
+
+## 6-5: Assessing Normality
+
+This section discusses how to determine if a set of data are normally distributed. This can be accomplished using histograms, or normal quantile plots. If the shape of the histogram deviates dramatically from a bell shape, then the data are not normally distributed.  With normal quantile plots, if the data points are reasonably close to a straight line and the points do not show some systematic pattern, then the data are normally distributed. Otherwise, the data are not normally distributed.
+
+We can obtain the normal quantile plot in R by using the commands <span style="color:red">qqnorm( )</span> and <span style="color:red">qqline( )</span>. 
+
+**Example 1**
+
+Consider this sample of five body temperatures (°F): 98.0, 98.3, 98.5, 97.3, 98.7. With only five values, a histogram will not be very helpful in revealing the distribution of the data. Instead, construct a normal quantile plot for these five values and determine whether they appear to come from a population that is normally distributed.
+
+**Solution**
+
+```{r}
+Body_Temp <- c(98, 98.3, 98.5, 97.3, 98.7)
+qqnorm(Body_Temp)
+qqline(Body_Temp, col ="red")
+
+```
+
+## Summary of R Commands
+### <span style="color:red">R command</span>	Task
+
+- <span style="color:red">pnorm(z)</span>
+	Computes the cumulative standard normal probability of z for the standard normal distribution
+- <span style="color:red">qnorm(α)</span>	Computes the value of z that cuts off an area of α in the lower tail of the standard normal probability distribution
+- <span style="color:red">install.packages(“visualize)</span>	Installs the “visualize” package
+- <span style="color:red">Visualize.norm (z)</span>	Computes the cumulative standard normal probability of z for the standard normal distribution and draws a picture of with the area shaded.
+- <span style="color:red">pnorm(x, mean=µ, sd=σ, lower.tail=TRUE)</span>
+	Computes the normal probability at the lower tail of a normal distribution with mean µ and standard deviation σ
+- <span style="color:red">qnorm(α, mean=µ, sd=σ, lower.tail = FALSE)</span>	Computes the value of x that cuts off an area of α in the upper tail of the standard normal probability distribution
+- <span style="color:red">qqnorm(Data) and qqline(Data)</span>	Produces the Quantile Plot of the data
+
+

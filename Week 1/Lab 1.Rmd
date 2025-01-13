@@ -1,0 +1,534 @@
+---
+title: "Lab 1"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Chapter 0: Getting Started with R
+
+## About R
+
+R is a powerful and free statistical analysis and graphics tool. It is driven by commands. R is known for its professional-looking graphics, which allow for complete customization. It is written and maintained by a group of volunteers known as the R core team. The base software is supplemented by many add-on packages developed by R users around the world. These packages cover a wide range of topics in statistics and are hosted on the [Comprehensive R Archive Network (CRAN)](http://www.r-project.org/).
+
+Anyone can contribute add-on packages, which are checked for quality before being added to the collection.
+
+### Downloading and Installing R
+
+For Windows:
+- Click on "Download R for Windows" from the CRAN website.
+- Click on "base" to download the current version of R.
+- Save the file, double-click it, and follow the on-screen instructions.
+
+For Mac:
+- Click on "Download for (Mac) OS X" from the CRAN website.
+- Download the latest `.pkg` file.
+- Double-click on the file and follow the on-screen instructions.
+
+### Installing RStudio
+
+RStudio is an integrated environment with four panes: 
+1. Source window
+2. Console
+3. Environment/History pane
+4. Window for displaying plots, files, packages, help, and viewer.
+
+You can download RStudio from [RStudio's website](https://www.rstudio.com/products/rstudio/download/). Install R first, as RStudio depends on it.
+
+---
+
+## Creating a New Project in RStudio
+
+To create a new project folder in RStudio:
+1. Go to `File > New Project...`
+2. Select `New Directory > New Project`.
+3. Choose or create a directory, enter the project name, and click "Create Project".
+
+---
+
+## Typing Commands in RStudio
+
+Commands can be typed in either the source window or the console. For example:
+
+```{r example_command, echo=TRUE}
+# Example of a basic arithmetic command
+15 + 2 - 8
+```
+
+## How to install Packages
+
+A package is a collection of functions and data that implement specific tasks. To install a package in R Studio, use the following command:
+
+install.packages("package_name")
+
+To use the package, use the following command:
+
+library(package_name)
+
+For example, to install the BSDA (Basic Statistics and Data Analysis) package, we type:
+
+<span style="color:red">install.packages("BSDA")</span>, wait for R to install the package, and type the command
+
+<span style="color:red">library(BSDA)</span> to use the package
+
+## Working Directory
+
+To find the current working directory:
+
+<span style="color:red">getwd()</span>
+
+To change the working directory:
+
+<span style="color:red">setwd("C:/desired/file/path")</span>
+
+## How to import data into R
+
+To import excel data into R, save the data as comma separated value (.csv) or tab delimited text (.txt) file. To import the .csv file into R, use the <span style="color:red">read.csv( )</span> command. Normally, we would need to type the path to find the file inside the parenthesis. However, a more convenient command is the <span style="color:red">file.choose( )</span> command. Typing this command inside the parenthesis opens a new window which allows us to browse directly to the location of the file on our computer and click on it. Thus, we type the command
+
+<span style="color:red">read.csv(file.choose( ))</span>
+
+to import the .csv file to R. To import a .txt file into R, we use the command
+
+<span style="color:red">read.delim(file.choose( ))</span>
+
+## How to Export Data from R as a .csv file
+
+Once data have been created in R, we can export them in several file formats, one of which is the comma separated values of .csv. To do so, we use the R Command 
+
+<span style="color:red">write.csv(data_name, file= 'file_path.csv')</span>
+
+## How to find help
+
+To get more information on any specific named function, for example mean, the command is <span style="color:red">help(mean)</span>. Alternatively, we can type a question mark in front of the word: <span style="color:red">?mean</span>
+
+## Assigning a value to a variable
+
+We can assign a value to a variable by combining the symbols < and – to form <-, like an arrow pointing to the variable. For example, we can assign the number 4 to the variable x by typing
+
+```{r}
+x <- 10
+```
+## Basic arithmetic in R 
+
+We can add, subtract, multiply divide and take exponents of numbers or expressions using the +, -  * , / and ^ signs respectively. 
+Example
+```{r}
+3*4 + 5^2 -6/2
+```
+## Vectors 
+
+A vector is a list of numbers or characters. It is equivalent to a column in an excel worksheet. We can create a vector using the c( ) command and entering the terms of the vector inside the parenthesis, each separated by a comma. 
+```{r}
+vector1 <- c(3, 5, 1, 8, 2)
+vector2 <- c("January", "February", "March", "April", "May")
+vector1
+vector2
+```
+Notice that for vector2, each term is in quotation marks since they are characters.
+
+- The command <span style="color:red">sort(x)</span> returns elements of vector x sorted.
+- The command <span style="color:red">table(x)</span> counts all values of vector x.
+- The command <span style="color:red">x[n]</span> selects the nth element of vector x.
+- The command <span style="color:red">x[-n]</span> selects all but the nth element of vector x.
+- The command <span style="color:red">x[m:n]</span> selects elements of vector x from m to n.
+- The command <span style="color:red">x[-(m:n)]</span> selects all elements of vector x except m to n.
+- The command <span style="color:red">x[c(m, n)]</span> selects m and n from vector x.
+
+## Dataframes
+
+A data frame is a special list or R object that is multidimensional and is usually used to store data read from an Excel or .CSV file. It is equivalent to an excel worksheet. A data frame can store values of different types. We use the following syntax to declare a data frame:
+
+Variable <- data.frame (vector_1, vector_2, … vector_n )
+
+For example, if we have the vectors 
+```{r}
+Student_Name <- c('James', 'Jane', 'John', 'Steve', 'Angela')
+Student_Age <- c(18, 21, 19, 15, 20)
+Student_GPA <- c(3.8, 3.5, 3.7, 3.9, 4.0)
+```
+We can create a dataframe that combines these vectors as follows:
+
+```{r}
+Student_Data <- data.frame(Student_Name, Student_Age, Student_GPA)
+Student_Data
+```
+
+If the dataframe has no title names, we can add the title of each column using either the <span style="color:red">names( )</span> function or by simply typing the names when assigning the vectors to the dataframe.
+
+For example, suppose in the above example, our vectors are vector1, vector2, and vector3. If we want to change the names to “Student Name”, “Student Age”, and “Student GPA” respectively, we can either use the command do the following:
+```{r}
+vector1 <- c("James", "Jane", "John", "Steve", "Angela")
+vector2 <- c(18, 21, 19, 15, 20)
+vector3 <- c(3.8, 3.5, 3.7, 3.9, 4.0)
+Student_Data2 <- data.frame(vector1, vector2, vector3)
+Student_Data2
+```
+We can then use the <span style="color:red">names( )</span> command to obtain our desired title names as follows:
+```{r}
+names(Student_Data2) <- c("Student Name", "Student Age", "Student GPA")
+Student_Data2
+```
+
+Alternatively, we can simply type the names within the parenthesis when assigning the vectors to the dataframe as follows:
+```{r}
+Student_Data3 <- data.frame("Student_Name"=c("James", "Jane", "John", "Steve", "Angela"), "Student_Age"=c(18, 21, 19, 15, 20), "Student_GPA"=c(3.8, 3.5, 3.7, 3.9, 4.0))
+Student_Data3
+```
+
+## Selecting a column from a dataframe
+
+To select a particular column in a dataframe attach the symbol 
+<span style="color:red">$</span>
+
+to the dataframe name followed by the name of the column. Note that once you type the <span style="color:red">$</span> 
+
+symbol next to the name of dataframe, all column names will appear in a drop-down menu, so you can simply click on the name of the desired column. For example, typing the command Student_Data3$Student_GPA in the example above will select the Student_GPA column
+
+### Attaching /Detaching Dataframes
+
+If you want to directly reference the name of the columns in the dataframe without going throuth the steps described above, you can attach the dataframe using the command attach(name_of_dataframe). You can detatch the dataframe when you are done by using the command detatch(name_of_dataframe).
+
+## Data Types
+
+The types of data in R are:
+•	Numeric, which contains all kinds of numbers
+•	Logical, which consist of logical values (TRUE/FALSE)
+•	Character, which consist of text
+
+We can check for the data type in a vector by using the syntax is.[data type](vector)
+
+For example, we can check if the Student_Name vector is a numeric data type by typing
+```{r}
+is.numeric(Student_Name)
+```
+The result “FALSE” means the variable type is not numeric
+
+```{r}
+is.character(Student_Name)
+```
+returns the value “TRUE”, which means Student_Name is a character.
+We can convert vectors to different data types using the command as.[data type](vector).  For example, converting the vector  (0, 1, 0, 3, 7, 0, 8) to a logical form yields the following:
+```{r}
+as.logical(c(0, 1, 0, 3, 7, 0, 8))
+```
+Notice that all zeros are converted to a logical value of FALSE, all other values are converted to TRUE.
+
+## Conditional Statements
+
+- The command <span style="color:red">a = = b</span> means a and b are equal.
+- The command <span style="color:red">a ! = b</span> means a is not equal to b.
+- The command <span style="color:red">a > = b</span> means a is greater than or equal to b.
+- The command <span style="color:red">a < = b</span> means a is less than or equal to b.
+
+## Built-in Data Sets in R
+
+R comes with several built-in data sets.  These data sets are generally used as practice data beginning R learners to use. Examples are mtcars, iris, ToothGrowth, USArrests, etc. To see a complete list of all built-in data sets in R, type the command data( ).
+
+## Summary of R Commands
+
+### <span style="color:red">R-command</span>	Task
+
+- <span style="color:red">ls( )</span>	Lists objects in Environment pane
+- <span style="color:red">rm( )</span>	Removes objects from Environment pane
+- <span style="color:red">install.packages(“Pakage_Name”)</span>	Installs Package
+- <span style="color:red">liberary(Package_Name)</span>	Readies package for use
+- <span style="color:red">read.csv(file.choose( ))</span>	Imports a .csv file into R
+- <span style="color:red">read.delim(file.choose( ))</span>	Imports a .txt file into R
+- <span style="color:red">write.csv(data_name, file= “file_path”)</span>	Exports a .csv file from R
+- <span style="color:red">help(word)</span>  or ?word	Accesses help from R on “word”
+- <span style="color:red">c( )</span>	Creates a vector by combining numbers or characters
+- <span style="color:red">names( )</span>	Adds names to dataframe
+- <span style="color:red">is.[data type](vector)</span>	Checks the data type of a vector
+- <span style="color:red">as.[data type](vector)</span>	Converts data types of a vector
+- <span style="color:red">getwd( )</span>	Locates the current work directory
+- <span style="color:red">setwd(‘C://file_path’)</span>	Changes the work directory to a desired location on the computer
+- <span style="color:red">sort(x)</span>	Returns elements of vector x sorted.
+- <span style="color:red">table(x)</span>	Counts all values of vector x.
+- <span style="color:red">x[n]</span>	Selects the nth element of vector x
+- <span style="color:red">x[-n]</span>	Selects all but the nth element of vector x.
+- <span style="color:red">x[m:n]</span>	Selects elements of vector x from m to n
+- <span style="color:red">x[-(m:n)]</span>	Selects all elements of vector x except m to n
+- <span style="color:red">x[c(m, n)]</span>	Selects m and n from vector x
+- <span style="color:red">data( )</span>	Gives a complete list of all built-in data sets in R
+- <span style="color:red">attach(name_of_dataframe)</span>	Attaches a dataframe to the R search path
+- <span style="color:red">detatch(name_of_dataframe)</span>	Detaches a dataframe from the R search path
+
+
+
+
+# Chapter 2: Exploring Data with Tables and Graphs
+
+## Creating Tables
+
+Frequency tables summarize categorical data by displaying the number of observations belonging to each category. Frequency tables for two categorical variables summarize the relationships between those variables by showing the number of observations that fall into each combination of categories. The R command for creating a frequency table from a single variable is <span style="color:red">table( )</span>.
+
+For example, we can obtain the Frequency table for the Species column in the iris dataframe from the built-in data in R as follows:
+
+```{r}
+table(iris$Species)
+```
+A two-way table can be entered as a matrix of objects. We can input the table as follows:
+
+```{r}
+
+Two_Way_Table <- matrix(c(1,3,2,5, 4, 2, 9, 7, 8), nrow=3, byrow=TRUE)
+Two_Way_Table
+```
+We can transpose a matrix using the <span style="color:red">t( )</span> command, as shown below:
+```{r}
+t(Two_Way_Table)
+```
+The R command <span style="color:red">prop.table( )</span> displays the table with each cell expressed as a proportion of the total count as shown below:
+```{r}
+prop.table(Two_Way_Table)
+```
+We can display the above table as percentages by multiplying by 100 using the <span style="color:red">round( )</span> command as follows:
+```{r}
+round(prop.table(Two_Way_Table)*100)
+```
+We can use the <span style="color:red">addmargins( )</span> command to display the table with row and column totals as shown below: 
+```{r}
+addmargins(Two_Way_Table)
+```
+
+## 2-1: Frequency Distributions for Organizing and Summarizing Data
+
+A frequency distribution shows how data are partitioned among several categories by listing the categories along with the frequency of data values associated with each of them. To create a frequency distribution, we first use either the <span style="color:red">summary( )</span> command or the <span style="color:red">range( )</span> command to identify the max and min numbers. We then identify the break points using the command 
+
+<span style="color:red">breaks <- seq(min, max, by = interval_size)</span>.
+
+Next, we use the function <span style="color:red">cut(Data, break, right = )</span> to find the bins. 
+
+```{r}
+Lead_and_IQ <- c(61, 82, 70, 72, 72, 95, 89, 57, 116, 95, 82, 116, 99, 74, 100,72, 126, 80, 86, 94, 100, 72, 63, 101, 85, 85, 124, 105, 81, 87)
+
+summary(Lead_and_IQ)
+
+breaks = seq(50, 130, by = 10)
+
+IQ.cut <- cut(Lead_and_IQ, breaks, right= FALSE)
+
+IQ.freq <- table(IQ.cut)
+cbind(IQ.freq)
+```
+
+## 2-2: Basic Skills and Concepts
+
+Data visualization is an important part of statistics. Graphs help us to spot trends and relationships that could easily be missed just by looking at the raw data. This chapter deals with how to explore data with tables and graphs. One of the hardest parts of an analysis is producing quality supporting graphics. Conversely, a good graph is one of the best ways to present findings. Fortunately, R provides excellent graphing capabilities, both in the base installation and with add-on packages such as lattice and ggplot2. We will briefly present some simple graphs using base graphics and then show their counterparts in ggplot2. 
+
+## Creating Graphs Using Base R
+
+Here are some R commands for creating common graphs in Base R
+
+- To create a simple scatterplot for the variables x and y, we use the command <span style="color:red">plot(x, y)</span>.
+- To create a histogram for a variable, we use the command <span style="color:red">hist(variable)</span>. We can specify the break points by including breaks = # of break points.  We can also specify breakpoints with vectors.
+- To create a histogram of densities, we use the command <span style="color:red">hist(variable, freq = FALSE)</span>.
+- We can create a normal quantile plot using the commands <span style="color:red">qqnorm(variable)</span> and <span style="color:red">qqline(variable)</span>
+- To create a stem plot, we use the command <span style="color:red">stem(variable)</span>.
+- To create a bar chart, we use the command <span style="color:red">bar(Table_of_objects)</span>. By default, this will yield vertical bars. To obtain a bar chart with horizontal bars, we use the command <span style="color:red">barplot(Table_of_objects, horiz = TRUE)</span>.
+- To create a Pie Chart, we use the command <span style="color:red">pie(Table_of_objects)</span>.
+- To create a boxplot, we use the command <span style="color:red">boxplot(Variable)</span>.
+- To create a boxplot for a grouped variable, we use the command <span style="color:red">boxplot(variable ~ factor, dataset)</span>.
+
+## Creating Graphs Using Using ggplot2
+
+The base R graphics are good for performing basic functions for beginners. If you want more customizing flexibility, it is good to use the ggplot2.  The  “gg” stands for “grammar of graphics”. It involves a set of rules for combining graphics components to produce graphs. To use ggplot2, we first have to install it. The easiest way to install it is to install the whole tidyverse using the command <span style="color:red">install.packages(“tidyverse”)</span> which contains ggplot2 and other packages. Alternatively, we can just install the ggplot2 package using the command <span style="color:red">install.packages(“ggplot2”)</span>. 
+A plot in ggplot2 can be divided into 3 parts:  **Data** + **Aesthetics** + **Geometry**
+
+**Data**: a dataframe
+
+**Aesthetics**:  used to indicate the x and y variables. It can be also used to control the color, the size and the shape of points, etc…. . It appears in the R command as **aes( )**
+
+**Geometry**: corresponds to the type of graphics (histogram, box plot, line plot, ….). It appears in the R command as **geom_** 
+
+- To create a scatterplot using ggplot2, use the command
+<span style="color:red">ggplot(Dataset, aes(x=, y=) + geom_point()</span>
+- To create a histogram, use the command 
+<span style="color:red">ggplot(Dataset, aes(x=, y=) + geom_histogram()</span>
+- To create a bar chart, use the command
+<span style="color:red">ggplot(Dataset, aes(x=, y=) +geom_bar()</span>
+
+**In Base R**:
+```{r}
+# Use the 'mtcars' dataset, a RStudio built-in dataset
+data <- mtcars$mpg  # Extract the 'mpg' (miles per gallon) column
+
+# Create a histogram
+hist(data,
+     main = "Histogram of Miles Per Gallon (mpg)",
+     xlab = "Miles Per Gallon",
+     ylab = "Frequency",
+     col = "lightblue",         # Color of the bars
+     border = "darkblue")       # Color of the bar borders
+```
+**In ggplot2**:
+```{r}
+# Load the ggplot2 package
+library(ggplot2)
+
+# Create a histogram
+ggplot(mtcars, aes(x = mpg)) +
+  geom_histogram(binwidth = 2, 
+                 fill = "lightblue", 
+                 color = "darkblue") +
+  labs(
+    title = "Histogram of Miles Per Gallon (mpg)",
+    x = "Miles Per Gallon",
+    y = "Frequency"
+  ) +
+  theme_minimal()
+```
+
+## 2-3: Graphs That Enlighten and Graphs That Deceive
+
+**Create a dot plot for 'mpg' (miles per gallon)**
+```{r}
+p <- ggplot(mtcars, aes(mpg)) +
+  geom_dotplot(binwidth = 1.5, fill = "blue") + 
+  scale_y_continuous(NULL, breaks = NULL) + # Remove y-axis labels and ticks
+  xlab("Miles Per Gallon (mpg)") + # Label for x-axis
+  theme_minimal() # Minimalistic theme
+
+# Display the plot
+print(p)
+```
+**Create a stem-and-leaf plot**
+
+Each "stem" represents a range of values, and the "leaves" represent individual data points within that range.
+The default behavior splits data into two parts:
+    The leading digit(s) form the "stem."
+    The trailing digit(s) form the "leaf."
+```{r}
+# Use the built-in mtcars dataset
+data <- mtcars$mpg  # Extract the 'mpg' (miles per gallon) column
+
+# Create a stem-and-leaf plot
+stem(data)
+```
+**Create a Pie Chart**
+```{r}
+Freq <-c(640, 195, 95, 63, 111)
+
+pie (Freq, labels = c("Pilot Error", "Mechanical", "Sabotage", "Weather", "Other"),
+  main = "Pie Chart of Causes of Plane Crashes")
+```
+
+## 2-4: Scatterplots, Correlation, and Regression
+
+This section provides a brief introduction to the concepts of scatterplots, correlation, correlation coefficient, and linear regression.
+
+Scatterplot and Correlation
+
+A correlation is said to exist between two variables when the values of one variable are somehow associated with the values of the other variable. A linear correlation exists between two variables when there is a relationship and the plotted points of paired data result in a pattern that can be approximated by a straight line. A scatterplot is a plot of paired (x, y) quantitative data with a horizontal x-axis and a vertical y-axis. The horizontal axis is used for the first variable (x), and the vertical axis is used for the second variable (y).
+
+The R command for the scatterplot of paired (x, y) quantitative data is  <span style="color:red">plot(x, y)</span>. 
+
+Listed below are the overhead widths (cm) of seals measured from aerial photographs and the weights (kg) of these same seals (based on “Mass Estimation of Weddell Seals Using Techniques of Photogrammetry,” by R. Garrott of Montana State University). The purpose of the study was to determine if weights of seals could be determined from overhead photographs. 
+
+- Overhead Width	7.2	7.4	9.8	9.4	8.8	8.4
+- Weight	116	154	245	202	200	191
+
+**Scatterplot Using Base R**:
+```{r}
+Overhead_Width <- c(7.2, 7.4, 9.8, 9.4, 8.8, 8.4)
+Weight <- c(116, 154, 245, 202, 200, 191)
+plot(Overhead_Width, Weight, xlab= "Overhead Width (cm)", ylab="Weigh (kg)")
+```
+**Scatterplot Using ggplot2**:
+```{r}
+Overhead_Width <- c(7.2, 7.4, 9.8, 9.4, 8.8, 8.4)
+Weight <- c(116, 154, 245, 202, 200, 191)
+Data1 <- data.frame(Overhead_Width, Weight)
+
+ggplot(Data1,  aes(x=Overhead_Width, y=Weight)) + geom_point() +
+    labs(x= "Overhead Width (cm)", y="Weigh (kg)") +
+    theme_light()
+```
+## Linear Correlation Coefficient r
+
+The Linear correlation coefficient is denoted by r, and it measures the strength of the linear association between two variables.  The R command for the linear correlation between x and y is <span style="color:red">cor(x, y)</span>. The R command for testing the significance of the Pearson correlation coefficient between x and y is <span style="color:red">cor.test(x, y)</span>. 
+
+Consider the “Foot and Height” data. 
+
+- Shoe Print Length (cm)	29.7	29.7	31.4	31.8	27.6
+- Height (cm)	175.3	177.8	185.4	175.3	172.7
+
+**The scatterplot and the linear correlation coefficient are shown below.**
+```{r}
+Shoe_Print_Length <- c(29.7, 29.7, 31.4, 31.8, 27.6)
+Height <- c(175.3, 177.8, 185.4, 175.3, 172.7)
+plot(Shoe_Print_Length, Height, xlab = "Shoe Print Length (cm)", ylab="Height(cm")
+
+cor.test(Shoe_Print_Length, Height)
+```
+## Regression
+Given a collection of paired data, the regression line is the straight line that best fits the scatterplot of the data. The regression equation 
+\[
+\hat{y} = b_0 + b_1x
+\]
+where \( b_0 \) is the y-intercept of the line and \( b_1 \) is the slope of the line. This equation algebraically describes the regression line.
+The R command for obtaining the least squares regression equation is   <span style="color:red">model <- lm(y ~ x, data = )</span>.  and <span style="color:red">summary(model)</span>. The R command for obtaining the least squares regression line is <span style="color:red">abline(model)</span>, where model is as defined earlier.
+
+```{r}
+# Load the built-in mtcars dataset
+data <- mtcars
+
+# Fit a linear regression model: mpg (miles per gallon) predicted by hp (horsepower)
+model <- lm(mpg ~ hp, data = data)
+
+# Summarize the model
+summary(model)
+
+# Plot the data and regression line
+plot(data$hp, data$mpg, 
+     xlab = "Horsepower (hp)", 
+     ylab = "Miles Per Gallon (mpg)",
+     main = "Regression of MPG on Horsepower")
+abline(model, col = "red")  # Add the regression line
+```
+Regression Equation:
+The least squares regression equation is:
+
+The regression equation is:
+
+\[
+\hat{y} = b_0 + b_1x
+\]
+
+Where:
+- \( b_0 \) is the intercept.
+- \( b_1 \) is the slope.
+
+In our case:
+
+\[
+\hat{y} = `r round(coef(model)[1], 2)` + `r round(coef(model)[2], 4)`x
+\]
+
+## Summary of R Commands
+### <span style="color:red">R command</span>	Task
+
+- <span style="color:red">table( )</span>	Creates a frequency table from a single variable
+- <span style="color:red">rownames( )</span>	Adds column names or lists column names
+- <span style="color:red">colnames( )</span>	Adds row names or lists row names
+- <span style="color:red">prop.table( )</span>	Displays the table with each cell expressed as a proportion of the total count
+- <span style="color:red">addmargins( )</span>	Displays the table with row and column totals
+- <span style="color:red">breaks <- seq(min, max, by = interval_size)</span>	Defines the break points
+- <span style="color:red">cut(Data, break, right = )</span>	Creates the bins
+- <span style="color:red">cbind( )</span>	Presents the table in vertical form
+- <span style="color:red">plot(x, y)</span>	Creates a simple scatterplot for the variables x and y in Base R
+- <span style="color:red">hist(variable)</span>	Creates a histogram for a variable in Base R
+- <span style="color:red">hist(variable, freq = FALSE)</span>	Creates a histogram of densities in Base R
+- <span style="color:red">qqnorm(variable)</span>  and <span style="color:red">qqline(variable)</span>	Creates a normal quantile plot
+- <span style="color:red">bar(Table_of_objects)</span>	Creates a bar chart in Base R
+- <span style="color:red">barplot(Table_of_objects, horiz = TRUE)</span>	Creates a bar chart with horizontal bars in Base R
+- <span style="color:red">pie(Table_of_objects)</span>	Creates a pie chart in Base R
+- <span style="color:red">boxplot(Variable)</span>	Creates a boxplot in Base R
+- <span style="color:red">boxplot(variable ~ factor, dataset)</span>	Creates a boxplot for a grouped variable in Base R
+- <span style="color:red">install.packages(“ggplot2”)</span>	Installs the ggplot2 package
+- <span style="color:red">ggplot(Dataset, aes(x=, y=) + geom_point()</span>	Creates a scatterplot in ggplot2
+- <span style="color:red">ggplot(Dataset, aes(x=, y=) + geom_histogram( )</span>	Creates a histogram in ggplot2
+- <span style="color:red">ggplot(Dataset, aes(x=, y=) +geom_bar()</span>	Creates a bar chart in ggplot2
+

@@ -1,0 +1,132 @@
+---
+title: "Lab 8"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# 11-1: Goodness-of-fit
+
+The Chi Square Goodness of fit test is used to test the hypothesis that an observed frequency distribution fits some claimed discrete distribution.
+
+The test statistic is 
+
+\[
+\chi^2 = \sum \frac{(O - E)^2}{E}
+\]
+
+where O =  observed frequency of an outcome
+              E = expected frequency of an outcome
+
+We can obtain the Chi square statistic along with the degrees of freedom and the p-value using the R command
+
+<span style="color:red">chisq.test(observed, p=expected)</span>
+
+where observed = vector of observed frequencies
+             expected = vector of expected probabilities
+
+To obtain the Chi square test for a specified Confidence level, use the command
+
+<span style="color:red">chisq.test(observed, p=expected, conf.level = )</span>
+
+If you want the result of the test without continuity correction, use the command
+
+<span style="color:red">chisq.test(observed, p=expected, correct = FALSE)</span>
+
+**Example 1**
+
+It is well known that when people report data, the results can be very different from those that are measured, especially when sensitive data such as weights or heights are involved. When weights of people are measured, the last digits of those weights tend to occur with about the same frequency. Data Set 4 “Measured and Reported” in Appendix B include weights of subjects that were both reported and measured. The data are from the National Center for Health Statistics. The last digits of weight (lb) of males are summarized below. Test the claim that the sample is from a population of weights in which the last digits do not occur with the same frequency. Based on the results, does it appear that the weights were reported or measured?
+
+| Last Digit | 0    | 1   | 2   | 3   | 4   | 5   | 6   | 7   | 8   | 9   |
+|------------|------|-----|-----|-----|-----|-----|-----|-----|-----|-----|
+| Frequency  | 1175 | 44  | 169 | 111 | 112 | 731 | 96  | 110 | 171 | 65  |
+
+**Solution**
+
+```{r}
+observed <- c(1175, 44, 169, 111, 112, 731, 96, 110, 171, 65)
+expected <- c(0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1)
+chisq.test(observed, p = expected)
+```
+
+**Example 2**
+
+Data sets following Benford’s law have leading (first) digits that follow the distribution shown in the top two rows of Table 11-4. Data sets that tend to follow Benford’s law include a class of errors in clinical trials as well as magnitudes of gradients from magnetic resonance imaging (MRI) scans, computed tomography (CT) scans, and ultrasound images. (A gradient in an image is a change in intensity or color along with a direction. The magnitude of a gradient includes only the amount of change without a direction.)
+The bottom row of Table 11-4 lists the frequencies of the leading digits of the magnitudes of gradients from an ultrasound image. Do the frequencies of the leading digits in the bottom row appear to fit the distribution of Benford’s law, as expected, or does it appear that the image has been corrupted with a substantial “noise” because the leading digits do not fit the distribution of Benford’s law? (There are methods for using Benford’s law to ensure images that have been corrupted with noise.)
+
+**Table 11-4**
+
+| Leading Digit | 1     | 2     | 3     | 4     | 5     | 6     | 7     | 8     | 9     |
+|---------------|-------|-------|-------|-------|-------|-------|-------|-------|-------|
+| Benford’s Law Distribution (%) | 30.1  | 17.6  | 12.5  | 9.7   | 7.9   | 6.7   | 5.8   | 5.1   | 4.6   |
+| Leading Digits of Magnitudes of Gradients in an Ultrasound Image | 69    | 40    | 42    | 26    | 25    | 16    | 16    | 17    | 20    |
+
+**Solution**
+
+```{r}
+observed <- c(69, 40, 42, 26, 25, 16, 16, 17, 20)
+expected <- c(0.301, 0.176, 0.125, 0.097, 0.079, 0.067, 0.058, 0.051, 0.046)
+chisq.test(observed, p = expected)
+```
+
+The test statistic is
+
+\[
+\chi^2 = \sum \frac{(O - E)^2}{E}
+\]
+
+as in section 11-1. Here, \(E\), the expected frequency in a cell, is found using the formula
+
+\[
+E = \frac{(\text{row total})(\text{column total})}{\text{grand total}}
+\]
+
+To obtain the Chi square statistic, we first need to organize the data in table form using the following R command:
+
+<span style="color:red">Data_Name <- as.table(rbind(c(observed), c(expected))</span>
+
+We then assign the row and column names using the following R command:
+
+<span style="color:red">dimnames(Data_Name) <- list(Row_names = c(“Row1_name”, “Row2_name”, …, “Rown_name”), Col_names = c(“Col1_name”, “Col2_name”, …, “Coln_name”))</span>
+
+Finally, we use the command:
+
+<span style="color:red">chisq.test (Data_Name)</span>
+
+to obtain the Chi square statistic and p-value.
+
+Example 3
+
+The table below lists results from a Reader’s Digest experiment in which 12 wallets were intentionally lost in each of 16 different cities, including New York City, London, Amsterdam, and so on. Use a 0.05 significance level with the data to test the null hypothesis that the cities have the same proportion of returned wallets. The Reader’s Digest headline “Most Honest Cities: The Reader’s Digest Lost Wallet Test” implies that whether a wallet is returned is dependent on the city in which it was lost. Test the claim that the proportion of returned wallets is not the same in the 16 different cities.
+
+| City              | A  | B  | C  | D  | E  | F  | G  | H  | I  | J  | K  | L  | M  | N  | O  | P  |
+|--------------------|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|
+| Wallet Returned   | 8  | 5  | 7  | 11 | 5  | 8  | 6  | 7  | 3  | 1  | 4  | 2  | 4  | 6  | 4  | 9  |
+| Wallet Not Returned | 4  | 7  | 5  | 1  | 7  | 4  | 6  | 5  | 9  | 11 | 8  | 10 | 8  | 6  | 8  | 3  |
+
+**Solution**
+```{r}
+Wallet <- as.table(rbind(c(8, 5, 7, 11, 5, 8, 6, 7, 3, 1, 4, 2, 4, 6, 4, 9), 
+                          c(4, 7, 5, 1, 7, 4, 6, 5, 9, 11, 8, 10, 8, 6, 8, 3)))
+dimnames(Wallet) <- list(Wallet_Return_Status =c("Returned", "Not Returned"), 
+                           City = c("A", "B", "C", "D", "E", "F", "G", "H", 
+                                    "I", "J", "K", "L", "M", "N", "O", "P"))
+Wallet
+
+chisq.test(Wallet)
+```
+
+## Summary of R Commands
+### <span style="color:red">R command</span>	Task
+
+- <span style="color:red">chisq.test(observed, p=expected)</span>
+	Computes the Chi square statistic and the p-value for goodness-of-fit
+- <span style="color:red">chisq.test (Data_Name)</span>
+	Computes the Chi square statistic and p-value for contingency tables
+- <span style="color:red">Data_Name <- as.table(rbind(c(observed), c(expected))</span>
+	Organizes the data into a table form
+- <span style="color:red">dimnames(Data_Name) <- list(Row_names = c(“Row1_name”, “Row2_name”, …, “Rown_name”), Col_names = c(“Col1_name”, “Col2_name”, …, “Coln_name”))</span>	Assigns row and column names
+
+

@@ -1,0 +1,449 @@
+---
+title: "Lab 3"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# Chapter 4: Probability
+
+## 4-1: Basic Concepts of Probability
+
+Probability is a numerical measure of how likely an outcome will occur. It can assume values between 0 and 1. 
+
+**Example 1**
+
+Find the probability that a randomly selected mother giving birth will have twins.
+
+**Solution**
+
+```{r}
+Prob_twin_birth = 120291/3747540
+Prob_twin_birth
+
+```
+**Example 2**
+
+In a Pew Research Center survey, randomly selected adults were asked if they have seen a ghost or have been in the presence of a ghost. 366 of the respondents answered “yes” and 1637 of the respondents answered “no.” Based on these results, find the probability that a randomly selected adult says that they have seen or been in the presence of a ghost.
+
+**Solution**
+
+```{r}
+yes <- 366
+no <- 1637
+total_responses <- yes + no
+Prob_of_yes = yes / total_responses
+Prob_of_yes
+
+```
+
+## 4-2: Addition Rule and Multiplication Rule
+
+**Example 1**
+
+Consider a clinical trial that begins with 6 females and 4 males, represented as follows:
+
+Females: 6
+
+Males:     4
+Total:     10
+
+a.	If 2 of these 10 subjects are randomly selected with replacement, find the probability that they are both females.
+
+b.	Repeat part a. but assume that the subjects are selected without replacement.
+
+```{r}
+#a)	With replacement
+prob_first_selection_female <- 6/10
+prob_second_selection_female <- 6/10
+prob_1st_female_and_second_female = prob_first_selection_female * prob_second_selection_female
+prob_1st_female_and_second_female
+
+#b)	 Without replacement
+prob_first_selection_female <- 6/10
+prob_second_selection_female <- 5/9
+prob_1st_female_and_second_female = prob_first_selection_female * prob_second_selection_female
+prob_1st_female_and_second_female
+
+```
+**Example 2**
+In a recent year, there was 130,639,273 full-time employees in the United States. If one of those employees is randomly selected and tested for illegal drug use, there is a 0.042 probability that the test will yield a positive result, indicating that the employee is using illegal drugs (based on data from Quest Diagnostics). Assume that three employees are randomly selected without replacement from the 130,639,273 employees in the United States. Find the probability that the three selected employees all test positive for illegal drug use.
+
+**Solution**
+```{r}
+options(scipen = 999)
+prob_first_tests_positive <- 0.042
+prob_second_tests_positive <- 0.042
+prob_third_tests_positive <- 0.042
+prob_all_3_test_positive = prob_first_tests_positive * prob_second_tests_positive * prob_third_tests_positive
+prob_all_3_test_positive
+```
+If all three events are treated as dependent without using the 5% guideline,
+```{r}
+options(scipen = 999)#We use this code to obtain the result in decimal form instead of scientific notation
+prob_first_tests_positive <- 5486849/130639273
+prob_second_tests_positive <- 5486848/130639272
+prob_third_tests_positive <- 5486847/130639271
+prob_all_3_test_positive = prob_first_tests_positive * prob_second_tests_positive * prob_third_tests_positive
+prob_all_3_test_positive
+```
+## 4-3: Complements, Conditional Probability, and Bayes’ Theorem
+
+**Example 1**
+
+The probability of randomly selecting someone with Group AB blood is 0.0526. A researcher needs at least one subject who has Group AB blood. If 20 subjects are randomly selected, find the probability of getting at least one with Group AB blood. Is the probability high enough so that the researcher can be reasonably sure of getting someone with Group AB blood?
+
+**Solution**
+
+```{r}
+prob_all_20_subjects_have_blood_not_Group_AB <- (1 - 0.0526)^20
+prob_at_least_1_of_20_subjects_has_Group_AB = 1 - prob_all_20_subjects_have_blood_not_Group_AB
+prob_at_least_1_of_20_subjects_has_Group_AB
+
+```
+**Example 2**
+
+a.	If 1 of the 555 test subjects is randomly selected, find the probability that the subject had a positive test result, given that the subject actually uses drugs. That is find P(positive test result | subject uses drugs)
+b.	If 1 of the 555 test subjects is randomly selected, find the probability that the subject actually uses drugs, given that the subject had a positive test result. That is, find P(subject uses drugs | positive test result).
+
+### Drug Test Results Table
+
+|                      | Positive Test Result (Test shows drug use) | Negative Test Result (Test shows no drug use) |
+|----------------------|--------------------------------------------|-----------------------------------------------|
+| **Subject Uses Drugs**      | 45 (True Positive)                           | 5 (False Negative)                             |
+| **Subject Does Not Use Drugs** | 25 (False Positive)                          | 480 (True Negative)                            |
+
+**Solution**
+
+```{r}
+
+positive_test <- 45 + 25
+uses_drugs <- 45 + 5
+positive_test_and_uses_drugs <- 45
+prob_positive_test_given_uses_drugs = positive_test_and_uses_drugs /uses_drugs
+prob_positive_test_given_uses_drugs
+
+prob_uses_drugs_given_positive_test = positive_test_and_uses_drugs / positive_test
+prob_uses_drugs_given_positive_test
+```
+
+## 4-4: Risks and Odds
+
+### Introduction to Risk Analysis
+
+This section introduces the concepts of **absolute risk reduction**, **relative risk**, **odds ratio**, and **numbers needed to treat**.
+
+### Formulas
+
+The formulas are given below based on the following table:
+
+|               | Disease   | No Disease |
+|---------------|-----------|------------|
+| **Treatment** | \( a \)   | \( b \)    |
+| **Placebo**   | \( c \)   | \( d \)    |
+
+### Definitions and Formulas:
+
+1. **Absolute Risk Reduction (ARR)**:
+   \[
+   \text{Absolute Risk} = \left| \frac{a}{a+b} - \frac{c}{c+d} \right|
+   \]
+
+2. **Number Needed to Treat (NNT)**:
+   \[
+   \text{NNT} = \frac{1}{\text{Absolute Risk Reduction}}
+   \]
+
+3. **Actual Odds Against Event A**:
+   \[
+   \frac{P(\bar{A})}{P(A)}
+   \]
+
+4. **Actual Odds in Favor of Event A**:
+   \[
+   \frac{P(A)}{P(\bar{A})}
+   \]
+
+5. **Relative Risk (RR)**:
+   \[
+   \text{RR} = \frac{p_t}{p_c} = \frac{\frac{a}{a+b}}{\frac{c}{c+d}}
+   \]
+
+6. **Efficacy**:
+   \[
+   \text{Efficacy} = \left[1 - (\text{Relative Risk})\right] \times 100\%
+   \]
+
+7. **Odds Ratio (OR)**:
+   \[
+   \text{OR} = \frac{ad}{bc}
+   \]
+
+---
+
+### Example: Prospective Study of Polio and Salk Vaccine
+
+Table 4-4: Prospective Study of Polio and Salk Vaccine
+
+|               | Polio | No Polio | Total     |
+|---------------|-------|----------|-----------|
+| **Salk Vaccine** | 33    | 200,712  | 200,745   |
+| **Placebo**      | 115   | 201,114  | 201,229   |
+
+**Example 1**
+Using the data summarized in Table 4-4, find the absolute risk reduction, which can be used to measure the effectiveness of the Salk vaccine
+
+**Solution**
+```{r}
+Prob_Polio_given_SalkVaccine <- 0.000164
+Prob_Polio_given_Placebo <- 0.000571
+Absolute_risk_reduction <- abs(Prob_Polio_given_SalkVaccine - Prob_Polio_given_Placebo)
+Absolute_risk_reduction
+```
+**Example 2**
+
+Use the data in Table 4-4 to find the relative risk.
+
+**Solution**
+```{r}
+
+a <- 33
+b <- 200712
+c <- 115
+d <- 201114
+p_t <- a/(a+b)
+p_c <- c/(c+d)
+Relative_risk <- p_t/p_c
+Relative_risk
+```
+
+## 4-5: Rates of Mortality, Fertility, and Morbidity
+
+# Rates and Their Formulas
+
+A **rate** describes the frequency of occurrence of some event. It is given by the formula:
+
+\[
+\frac{a}{b}k
+\]
+
+Where:
+- \( a \): Frequency count of the number of people for whom the event occurred.
+- \( b \): Total number of people exposed to the risk of the event occurring.
+- \( k \): Multiplier number.
+
+---
+
+### Mortality Rates
+
+1. **Crude Mortality Rate**:
+   \[
+   \text{Crude Mortality Rate} = \frac{\text{deaths}}{\text{population size}}k
+   \]
+
+2. **Infant Mortality Rate**:
+   \[
+   \text{Infant Mortality Rate} = \frac{\text{deaths of infants under 1 year of age}}{\text{number of live births}}k
+   \]
+
+3. **Neonatal Mortality Rate**:
+   \[
+   \text{Neonatal Mortality Rate} = \frac{\text{deaths of infants under 28 days of age}}{\text{number of live births}}k
+   \]
+
+4. **Fetal Mortality Rate**:
+   \[
+   \text{Fetal Mortality Rate} = \frac{\text{fetuses delivered without life after 20 weeks of gestation}}{\text{number of live births} + \text{fetuses delivered without life after 20 weeks of gestation}}k
+   \]
+
+5. **Perinatal Mortality Rate**:
+   \[
+   \text{Perinatal Mortality Rate} = \frac{\text{fetal deaths} + \text{neonatal deaths}}{\text{live births} + \text{fetal deaths}}k
+   \]
+
+---
+
+### Fertility Rates
+
+1. **Crude Birth Rate**:
+   \[
+   \text{Crude Birth Rate} = \frac{\text{live births}}{\text{population size}}k
+   \]
+
+2. **General Fertility Rate**:
+   \[
+   \text{General Fertility Rate} = \frac{\text{live births}}{\text{number of women aged 15-44}}k
+   \]
+
+---
+
+### Morbidity Rates
+
+1. **Incident Rate**:
+   \[
+   \text{Incident Rate} = \frac{\text{reported new cases of disease}}{\text{population size}}k
+   \]
+
+2. **Prevalence Rate**:
+   \[
+   \text{Prevalence Rate} = \frac{\text{number of people with disease at a given time}}{\text{population size at the given point in time}}k
+   \]
+
+**Example 1**
+
+For a recent year in the United States, there were 3,358,814 deaths in a population of 331,002,651 people. Use those values with a multiplier of 1000 to find the crude mortality rate.
+
+**Solution**
+```{r}
+k <- 1000
+deaths <- 3358814
+population_size <- 331002651
+Crude_mortality_rate <- (deaths/population_size)*k
+Crude_mortality_rate
+```
+
+**Example 2**
+
+The infant mortality rate is a very important measure of the health of a region. (According to the United Nations, the worldwide infant mortality rate is 49.4 per 1000 live births.) For a recent year, there were 3,957,542 live births in the United States and 22,496 deaths of infants under 1 year of age. Using a multiplying factor of k = 1000, find the infant mortality rate of the United States and compare it to the rate of 1.8 for Japan.
+
+**Solution**
+```{r}
+k <- 1000
+death_of_infants_under_1_yr <- 22496
+number_of_live_births <- 3957542
+Infant_mortality_rate <- (death_of_infants_under_1_yr/number_of_live_births)*k 
+Infant_mortality_rate
+```
+## 4-6: Counting
+
+This section discusses methods for counting the number of possible outcomes in a variety of situations.
+
+### Multiplication Counting Rule
+
+For a sequence of events in which:
+- The first event can occur \( n_1 \) ways,
+- The second event can occur \( n_2 \) ways,
+- The third event can occur \( n_3 \) ways, and so on,
+
+The total number of outcomes is given by:
+
+\[
+n_1 \times n_2 \times n_3 \times \dots
+\]
+
+The Factorial Rule
+
+The number of different arrangements of n different items when all n of them are selected is n!
+
+The R command for the factorial is <span style="color:red">factorial(n)</span>.
+
+**Example 1**
+
+Phase 1 of a clinical trial begins with 8 different patients given a treatment. The first subject is given the treatment and then observed for adverse reactions. The second subject is given the treatment, and so on. How many different ways can the eight subjects be arranged?
+
+Solution
+```{r}
+number_of_ways <- factorial(8)
+number_of_ways
+```
+
+**Permutation Rule**
+
+When n different items are available and r of them are selected without replacement, the number of different permutations is given by
+
+\[
+nPr = \frac{n!}{(n-r)!}
+\]
+
+Where:
+- \( n \): Total number of items.
+- \( r \): Number of items chosen.
+- \( n! \): Factorial of \( n \).
+
+The R command for finding the permutation or r subjects drawn from a larger set of n object is  <span style="color:red">factorial (n) / factorial(n – r)</span>.
+
+**Example 2**
+
+In Example 1, we had 8 subjects to be treated, and all of them are given the treatment. Suppose we now have 8 subjects available, but we need to treat only 5 of them. As in Example 1, we want to be cautious by treating the 5 subjects in sequence, so that any particular adverse effect can allow us to stop the treatments before other subjects are treated. If 8 subjects are available, how many different sequences of 5 subjects are possible?
+
+**Solution**
+```{r}
+n <- 8
+r <- 5
+number_of_ways = factorial(n)/factorial(n-r)
+number_of_ways
+```
+**Permutation Rule (When Some Items Are Identical to Others)**
+
+The number of different permutations when n items are available and all n of them are selected without replacement, but some of the items are identical to others, is found as follows:
+
+The formula for permutations with repeated items is:
+
+\[
+\frac{n!}{n_1! \, n_2! \, \dots \, n_k!}
+\]
+
+Where:
+- \( n_1 \): Items that are alike,
+- \( n_2 \): Items that are alike,
+- \( n_k \): Items that are alike.
+
+The **R command** for finding the permutation of \( n \) items when all \( n \) are selected with \( n_1 \) alike, \( n_2 \) alike, …, \( n_k \) alike is:
+
+
+<span style="color:red">factorial(n) / (factorial(n1) * factorial(n2) * ... * factorial(nk))</span>
+
+**Example 3**
+
+When designing surveys, pollsters often repeat a question to see if a subject is thoughtlessly providing answers jut to finish quickly. For one survey with 10 questions, 2 of the questions are identical to each other (with superficial differences in wording), and 3 of the other questions are also identical to each other (with superficial differences in wording). For this survey, how many different arrangements are possible? 
+
+**Solution**
+```{r}
+n <- 10
+n1 <- 2
+n2 <- 3
+n
+
+number_of_different_arrangements <- factorial(n)/(factorial(n1) * factorial(n2))
+number_of_different_arrangements
+```
+
+**Combination Rule**
+
+When n different items are available, but only r of them are selected without replacement, the number of different combinations is found as follows:
+
+The formula for combinations (\( nCr \)) is:
+
+\[
+nCr = \frac{n!}{(n-r)! \, r!}
+\]
+
+Where:
+- \( n \): Total number of items.
+- \( r \): Number of items chosen.
+- \( n! \): Factorial of \( n \).
+
+The R command for the number of combinations of r objects drawn from a larger set n is  <span style="color:red">choose (n, r)</span>.
+
+**Example 4**
+For a clinical trial, assume that we want to treat 20 healthy humans with a new drug, and we have 30 suitable volunteers available. If 20 subjects are selected from the 30 that are available, and the 20 selected subjects are all treated at the same time, how many different treatment groups are possible?
+
+**Solution**
+```{r}
+n <- 30
+r <- 20
+number_of_different_groups <- choose(n, r)
+number_of_different_groups
+```
+
+## Summary of R Commands
+### <span style="color:red">R command</span>	Task
+
+- <span style="color:red">options(scipen = 999)</span>	Gives the answers in decimals instead of in scientific notation
+- <span style="color:red">factorial(n)</span>.	Calculates the factorial of n.
+- <span style="color:red">factorial (n) / factorial(n – r)</span>	the permutation or r subjects drawn from a larger set of n object
+- <span style="color:red">factorial (n) /( factorial(n1)* factorial(n2) * . . . * factorial(nk))</span>
+	the permutation n items when all n are selected with  n1  alike, n2  alike, …, nk  alike
+- <span style="color:red">choose (n, r)</span>	number of combinations of r objects drawn from a larger set n is
+

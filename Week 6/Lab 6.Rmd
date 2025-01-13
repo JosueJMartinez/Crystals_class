@@ -1,0 +1,396 @@
+---
+title: "Lab 6"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Chapter 9: Inferences from Two Samples
+
+## 9-1: Two Proportions
+
+This section describes how to conduct a hypothesis test of a claim about two population proportions. The test statistic is 
+
+\[
+z = \frac{(\hat{p}_1 - \hat{p}_2) - (p_1 - p_2)}{\sqrt{\frac{\bar{p} \bar{q}}{n_1} + \frac{\bar{p} \bar{q}}{n_2}}}
+\]
+
+Where:
+- \( \hat{p}_1, \hat{p}_2 \): Sample proportions.
+- \( p_1, p_2 \): Population proportions.
+- \( \bar{p} \): Pooled proportion, defined as \( \bar{p} = \frac{x_1 + x_2}{n_1 + n_2} \).
+- \( \bar{q} = 1 - \bar{p} \): Complement of the pooled proportion.
+- \( n_1, n_2 \): Sample sizes.
+
+The R command for testing about a proportion is 
+
+<span style="color:red">prop.test(c(x1, x2), c(n1, n2), correct = , alternative = )</span>
+
+Note:
+•	correct = TRUE uses a continuity correction factor
+•	correct = FALSE does not use a continuity correction factor
+•	alternate = "two.sided" (default)  or “greater” or “less”
+
+**Example 1**
+
+Table 9-1 in the Chapter Problem includes the two sample proportions of success for the e-cigarette treatment group and the nicotine replacement treatment group.
+
+Table 9-1: Smoking Cessation Study Results
+
+|                          | E-Cigarettes | Nicotine Replacement |
+|--------------------------|--------------|-----------------------|
+| **Not smoking after 52 weeks** | 79           | 44                    |
+| **Number of subjects**         | 438          | 446                   |
+
+Use a 0.05 significance level and the p-value method to test the claim that there is no difference in success rates between the two treatment groups.
+
+**Solution**
+```{r}
+prop.test(c(79, 44), c(438, 446), correct = FALSE, alternative = "two.sided")
+```
+**Confidence Intervals**
+
+The confidence interval estimate of \( p_1 - p_2 \) is given by:
+
+\[
+(\hat{p}_1 - \hat{p}_2) - E < (p_1 - p_2) < (\hat{p}_1 - \hat{p}_2) + E
+\]
+
+Where:
+- \( E \): The margin of error, calculated as:
+  \[
+  E = z_{\alpha/2} \sqrt{\frac{\hat{p}_1 \hat{q}_1}{n_1} + \frac{\hat{p}_2 \hat{q}_2}{n_2}}
+  \]
+
+---
+
+**Definitions**
+
+- \( \hat{p}_1, \hat{p}_2 \): Sample proportions.
+- \( \hat{q}_1 = 1 - \hat{p}_1 \), \( \hat{q}_2 = 1 - \hat{p}_2 \): Complements of the sample proportions.
+- \( n_1, n_2 \): Sample sizes.
+- \( z_{\alpha/2} \): Critical value for the desired confidence level.
+
+The R command for the critical value is 
+
+Left-tailed: <span style="color:red">qnorm(α)</span>
+
+Right-tailed: <span style="color:red">qnorm(1 - α)</span>
+
+Two-tailed: <span style="color:red">qnorm(1 - α/2)</span>
+
+## 9-2: Two Means: Independent Samples
+
+This section describes procedures for testing the claim about the difference between two independent population means. The test statistic is
+
+The formula for the \( t \)-statistic is:
+
+\[
+t = \frac{(\bar{x}_1 - \bar{x}_2) - (\mu_1 - \mu_2)}{\sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}}}
+\]
+
+Where:
+- \( \bar{x}_1, \bar{x}_2 \): Sample means.
+- \( \mu_1, \mu_2 \): Population means.
+- \( s_1^2, s_2^2 \): Sample variances.
+- \( n_1, n_2 \): Sample sizes.
+
+The R command for testing a claim about μ_1-μ_2  is  as follows:
+
+Two-tailed:  <span style="color:red">t.test(variable1, variable2, paired = FALSE, mu = )</span>
+
+Right-tailed:  <span style="color:red">t.test(variable1,variable2, paired = FALSE, mu =, alternative = “greater”)</span>
+
+Right-tailed:  <span style="color:red">t.test(variable1, variable2, paired = FALSE, mu =, alternative = “less”)</span>
+
+**Example 1**
+
+Listed below are heights (mm) of randomly selected U.S. Army male personnel measured in 1988 (from Data Set 2 “ANSUR I 1988” in Appendix B) and different heights (mm) of randomly selected U.S. Army male personnel measured in 2012 (from Data Set 3 “ANSUR II 2012”). Use a 0.05 significance level to test the claim that the mean height of the 1988 population is less than the mean height of the 2012 population.
+
+**Table: ANSUR Data**
+
+| **Year**    | **Values**                                                                                           |
+|-------------|-----------------------------------------------------------------------------------------------------|
+| **ANSUR 1988** | 1698, 1727, 1734, 1684, 1667, 1680, 1785, 1885, 1841, 1702, 1738, 1732                           |
+| **ANSUR 2012** | 1810, 1850, 1777, 1811, 1780, 1733, 1814, 1861, 1709, 1740, 1694, 1766, 1748, 1794, 1780         |
+
+**Solution**
+```{r}
+ANSUR_1988 <- c(1698, 1727, 1734, 1684, 1667, 1680, 1785, 1885, 1841, 1702, 1738,
++                 1732)
+ANSUR_2012 <- c(1810, 1850, 1777, 1811, 1780, 1733, 1814, 1861, 1709, 1740, 1694, 1766, 
++                 1748, 1794, 1780)
+t.test(ANSUR_1988, ANSUR_2012, mu=0, paired = FALSE, alternative = "less")
+
+```
+**Example 2**
+
+Repeat Example 1 by constructing a confidence interval estimate of the difference between the mean height in 1988 and the mean height in 2012.
+
+**Solution**
+```{r}
+ANSUR_1988 <- c(1698, 1727, 1734, 1684, 1667, 1680, 1785, 1885, 1841, 1702, 1738, 1732)
+ANSUR_2012 <- c(1810, 1850, 1777, 1811, 1780, 1733, 1814, 1861, 1709, 1740, 1694, 1766, 
++                 1748, 1794, 1780)              
+x1_bar <- mean(ANSUR_1988)
+x1_bar
+
+x2_bar <- mean(ANSUR_2012)
+x2_bar
+
+s1 <- sd(ANSUR_1988)
+s1
+
+s2 <- sd(ANSUR_2012)
+s2
+
+n1 <- length(ANSUR_1988)
+n1
+
+n2 <- length(ANSUR_2012)
+n2
+
+MOE <- qt(0.95, n1 -1 )* sqrt(s1^2/n1 + s2^2/n2)
+MOE
+
+Lower <- (x1_bar - x2_bar) - MOE
+Lower
+
+Upper <- (x1_bar - x2_bar) + MOE
+Upper
+```
+The confidence interval is -79.42974 mm < \( \mu_1 - \mu_2 \) <  2.66307 mm
+
+**Confidence Intervals**
+
+The confidence interval estimate of \( \mu_1 - \mu_2 \) is given by:
+
+\[
+\left( (\bar{x}_1 - \bar{x}_2) - E \right) < (\mu_1 - \mu_2) < \left( (\bar{x}_1 - \bar{x}_2) + E \right)
+\]
+
+Where:
+- \( E \): The margin of error, calculated as:
+  \[
+  E = t_{\alpha/2} \sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}}
+  \]
+
+---
+
+**Definitions**
+
+- \( \bar{x}_1, \bar{x}_2 \): Sample means.
+- \( \mu_1, \mu_2 \): Population means.
+- \( s_1^2, s_2^2 \): Sample variances.
+- \( n_1, n_2 \): Sample sizes.
+- \( t_{\alpha/2} \): Critical \( t \)-value for the desired confidence level.
+
+The R command for the critical value is 
+
+Left-tailed: <span style="color:red">qt(α)</span>
+
+Right-tailed: <span style="color:red">qt(1 - α)</span>
+
+Two-tailed: <span style="color:red">qt(1 - α/2)</span>
+
+## 9-3: Two Dependent Samples (Matched Pairs)
+
+This section describes methods for testing hypotheses and constructing confidence intervals involving the mean of the differences of the values from two populations that consist of matched pairs such as before/after measurements from the same subjects.
+
+The test statistic is
+
+The formula for the \( t \)-statistic is:
+
+\[
+t = \frac{\bar{d} - \mu_d}{\frac{s_d}{\sqrt{n}}}
+\]
+
+Where:
+- \( \bar{d} \): Mean difference of the paired data.
+- \( \mu_d \): Hypothesized mean difference.
+- \( s_d \): Standard deviation of the differences.
+- \( n \): Number of pairs.
+
+The R command for the testing a claim about μ_d  is  as follows:
+
+Two-tailed:  <span style="color:red">t.test(variable1, variable2, paired =TRUE, mu = )</span>
+
+Right-tailed:  <span style="color:red">t.test(variable1, variable2, paired =TRUE, mu = , alternative = “greater”)</span>
+
+Left-tailed:  <span style="color:red">t.test(variable1, variable2, paired =TRUE, mu = , alternative = “less”)</span>
+
+**Example 1**
+
+It is a common belief that if you ask someone how much they weigh, you tend to get a number that is somewhat lower than the number you would probably get by using a scale to weigh them. Listed below are measured and reported weights (lb) of random male subjects (from Data Set 4 “Measured and Reported” in Appendix B). Use a 0.05 significance level to test the claim that for males, the measured weights tend to be higher than the reported weights.
+
+Measured and Reported Weights
+
+| **Subject**              | 1     | 2     | 3     | 4     | 5     | 6     | 7     | 8     |
+|--------------------------|-------|-------|-------|-------|-------|-------|-------|-------|
+| **Measured Weight (lb)** | 152.6 | 149.3 | 174.8 | 119.5 | 194.9 | 180.3 | 215.4 | 239.6 |
+| **Reported Weight (lb)** | 150   | 148   | 170   | 119   | 185   | 180   | 224   | 239   |
+
+**Solution**
+```{r}
+Measured_Weight <- c(152.6, 149.3, 174.8, 119.5, 194.9, 180.3, 215.4, 239.6)
+
+Reported_Weight <- c(150, 148, 170, 119, 185, 180, 224, 239)
+
+t.test(Measured_Weight, Reported_Weight,  paired = TRUE, mu = 0, alternative = "greater")
+
+```
+
+**Confidence Interval**
+
+The confidence interval for \( \mu_d \) is given by:
+
+\[
+\bar{d} - E < \mu_d < \bar{d} + E
+\]
+
+Where:
+- \( E = t_{\alpha/2} \cdot \frac{s_d}{\sqrt{n}} \)
+- Degrees of freedom (\( \text{df} \)):
+  \[
+  \text{df} = n - 1
+  \]
+
+---
+
+**Definitions**
+
+- \( \bar{d} \): Mean difference of the paired data.
+- \( \mu_d \): Population mean difference.
+- \( s_d \): Standard deviation of the differences.
+- \( n \): Number of pairs.
+- \( t_{\alpha/2} \): Critical \( t \)-value for the desired confidence level.
+
+The R command for the critical t value of a matched pairs t test is
+
+<span style="color:red">qt(1 - alpha/2, n-1)</span>
+
+The R command for the margin of error is
+
+<span style="color:red">qt(1 - alpha/2, n-1) * s/sqrt(n)</span>
+
+where alpha is the α – level, s is the standard deviation of the difference between the pairs, and n is the sample size
+
+**Example 2**
+
+Using the same sample data in Example 1, construct a 90% confidence interval estimate of \( \mu_d \), which is the mean of the differences between measured weights and reported weights of males. By using a confidence level of 90%, we get a result that could be used for the hypothesis test in Example 1. (Because the hypothesis test is one-tailed with a significance level of α=0.05, the confidence level should be 90%).
+
+**Solution**
+```{r}
+d <- Measured_Weight - Reported_Weight
+d_bar <- mean(d)
+d_bar
+
+s_d <- sd(d)
+s_d
+
+n <- length(d)
+n
+
+alpha <- 0.1
+t_crit <- qt(1 - alpha/2, n-1) 
+t_crit
+
+MOE <- t_crit * s_d/sqrt(n)
+MOE
+
+Lower <- d_bar - MOE
+Lower
+
+Upper <- d_bar + MOE
+Upper
+```
+The confidence level is -2.045558 lb< \( \mu_d \)< 4.895558 lb
+
+## 9-4: Two Variances or Standard Deviations
+
+In this section, we describe procedures for testing claims about two population variances or standard deviations.
+
+The test statistic for testing the equality of variances (\( \sigma_1^2 = \sigma_2^2 \)) is:
+
+\[
+F = \frac{s_1^2}{s_2^2}
+\]
+
+Where:
+- The numerator degrees of freedom: \( n_1 - 1 \),
+- The denominator degrees of freedom: \( n_2 - 1 \).
+
+---
+
+**Definitions**
+
+- \( s_1^2 \): The larger of the two sample variances.
+- \( s_2^2 \): The smaller of the two sample variances.
+- \( \sigma_1^2 \): Variance of the population from which the sample with the larger variance was drawn.
+- \( \sigma_2^2 \): Variance of the population from which the sample with the smaller variance was drawn.
+- \( n_1 \): Size of the sample with the larger variance.
+- \( n_2 \): Size of the sample with the smaller variance.
+
+The R command for testing a claim about two population variances is 
+
+<span style="color:red">var.test(Variable1, Variable2, alternative = )</span>
+
+Note:
+•	alternate = "two.sided" (default)  or “greater” or “less”
+
+**Example 1**
+
+Listed below are weights (kg) of randomly selected male U.S. Army personnel from Data Set 2 “ANSUR I 1988” and Data Set 3 “ANSUR II 2012” in Appendix B. Use a 0.05 significance level to test the claim that the variation among weights did not change from the ANSUR I study in 1988 to the ANSUR II study in 2012.
+
+| **Year**      | **Values**                                                                                          |
+|---------------|----------------------------------------------------------------------------------------------------|
+| **ANSUR I 1988** | 63.0, 88.9, 71.1, 83.6, 84.2, 76.3, 69.5, 74.4, 81.4, 72.0, 85.5, 111.1                           |
+| **ANSUR II 2012** | 90.8, 86.1, 101.1, 76.9, 63.0, 98.4, 83.5, 65.1, 111.5, 78.0                                    |
+**Solution**
+```{r}
+ANSUR_1988 <- c(63.0, 88.9, 71.1, 83.6, 84.2, 76.3, 69.5, 74.4, 81.4, 72.0, 85.5, 111.1)
+ANSUR_2012 <- c(90.8, 86.1, 101.1, 76.9, 63.0, 98.4, 83.5, 65.1, 111.5, 78.0)
+var.test(ANSUR_1988, ANSUR_2012, alternative = "two.sided")
+
+```
+
+## Summary of R Commands
+### <span style="color:red">R command</span>	Task
+
+- <span style="color:red">prop.test(c(x1, x2), c(n1, n2), correct = , alternative = )</span>
+	Produces the result of a test of two population proportions
+- <span style="color:red">t.test(variable1, variable2, paired = FALSE, 
+mu = )</span>
+	Produces the results of a two-tailed test of the difference between the means of two independent samples
+- <span style="color:red">t.test(variable1,variable2, paired = FALSE, 
+mu =, alternative = “greater”)</span>	Produces the results of a right-tailed test of the difference between the means of two independent samples
+- <span style="color:red">t.test(variable1, variable2, paired = FALSE, 
+mu =, alternative = “less”)</span>
+	Produces the results of a left-tailed test of the difference between the means of two independent samples
+- <span style="color:red">t.test(variable1, variable2, paired =TRUE, 
+mu = )</span>
+	Produces the results of a two-tailed test of the difference between the means of two matched pairs samples
+- <span style="color:red">t.test(variable1, variable2, paired =TRUE, mu = , alternative = “greater”)</span>
+
+	Produces the results of a right-tailed test of the difference between the means of two matched pairs
+- <span style="color:red">t.test(variable1, variable2, paired =TRUE, 
+mu = , alternative = “less”)</span>	Produces the results of a right-tailed test of the difference between the means of two matched pairs
+- <span style="color:red">qt(α, n-1)</span>
+	Computes the critical value of a left-tailed t-test
+- <span style="color:red">qt(1-α, n-1)</span>
+	Computes the critical value of a right-tailed t-test
+- <span style="color:red">qt(1 - α/2, n-1)</span>
+	Computes the critical value of a two-tailed t-test
+- <span style="color:red">qt(1 - α/2, n-1) * s/sqrt(n)</span>
+	Computes the margin of error for the t-test
+- <span style="color:red">var.test(Variable1, Variable2, alternative = )</span>
+	Produces the results of a test of a claim about two population variances
+- <span style="color:red">qnorm(α)</span>	Computes the critical value for a left-tailed z-test
+- <span style="color:red">qnorm(1 - α)</span>	Computes the critical value for a right-tailed z-test
+- <span style="color:red">qnorm(1 - α/2)</span>	Computes the critical value for a two-tailed z-test
+
+
+
+

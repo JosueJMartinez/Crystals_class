@@ -1,0 +1,342 @@
+---
+title: "Lab 2"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# Chapter 3: Describing, Exploring, and Comparing Data
+
+## 3-1: Measures of Central Tendency
+
+The measures of Center are the Mean, Median and Mode. 
+
+**Mean**
+
+The mean is the arithmetic average of the data. It is the sum of all the individual data divided by the total number of data points. 
+
+The formula for the mean (\( \bar{x} \)) is:
+
+\[
+\bar{x} = \frac{\sum x}{n}
+\]
+
+Where:
+- \( \sum x \): The sum of all data points.
+- \( n \): The total number of data points.
+
+In R, we can obtain the mean using the command 
+
+<span style="color:red">mean( )</span>
+
+**Example 1**
+
+Listed below are the cotinine measurements (ng/ml) from a Smokers group. Find the mean of these 20 cotinine levels.
+
+- 362	210	400	520	360	166	296	262	236	200
+- 190	401	212	284	242	385	103	248	381	385
+
+**Solution**
+
+```{r}
+cotinine <- c(362, 210, 400, 520, 360, 166, 296, 262, 236, 200, 190, 401, 212, 284,  
+                242, 385, 103, 248, 381, 385)
+mean(cotinine)
+```
+**Median**
+The median is the middle of the data when the data points are arranged in order of magnitude. It is also the 50th percentile. The median is preferred to the mean if we have skewed data because, unlike the mean, the median is not affected by outliers. 
+
+In R, we can obtain the median using the command
+
+<span style="color:red">median( )</span>
+
+**Example 2**
+
+Find the median of the first 11 cotinine values from the Smokers group.
+- 362	210	400	520	360	166	296	262	236	200	190
+
+**Solution**
+
+```{r}
+cotinine <- c(362, 210, 400, 520, 360, 166, 296, 262, 236, 200, 190)
+
+median(cotinine)
+```
+**Mode**
+The mode is the value in the data with the highest frequency.  R does not have a function to find the mode directly. To obtain the mode in R, we first create a frequency table using the R command <span style="color:red">table( )</span>. 
+
+We then sort the elements in the table in decreasing order and select the first element using the function
+<span style="color:red">sort( table_name, decreasing = TRUE)[1]</span>
+to obtain the mode if there is only one mode. If there is more than one mode, we use the following function:
+<span style="color:red">table_name[table_name == max(table_name) ) & table_name != 1]</span>
+
+**Example 4**
+
+Find the mode of the 20 cotinine levels for Smokers, as listed here:
+- 362	210	400	520	360	166	296	262	236	200
+- 190	401	212	284	242	385	103	248	381	385
+
+**Solution**
+```{r}
+cotinine <- c(362, 210, 400, 520, 360, 166, 296, 262, 236, 200, 190, 401, 212,284,242, 385, 103, 248, 381, 385)
+
+freq_cotinine <- table(cotinine)#This creates the freq table for the cotinine vector
+freq_cotinine
+
+sort(freq_cotinine, decreasing = TRUE)[1]
+
+```
+Here, the mode is 385, and it has a frequency of 2.
+
+## 3-2:  Measures of Variation
+The measures of variation are the measures of the spread of the data. They are the range, variance, standard deviation, and coefficient of variation.
+**Range**
+The range is the difference between the largest value and the smallest value
+The R command for finding the range is
+
+<span style="color:red">range()</span>
+
+gives the largest and smallest values. To find the value of the range, we simply subtract the smallest value from the largest value. Alternatively, we can also use the R commands <span style="color:red">max(vector2)</span> and <span style="color:red">min(vector1)</span> to find the maximum and minimum values respectively, and subtract them. Or, we can simply type <span style="color:red">range(vector2) – range(vector1)</span>.
+
+**Example 1**
+
+Listed below are the first measured values of cotinine (ng/ml) from Smokers:
+- 362	210	400	520	360
+
+Find the range.
+
+**Solution**
+```{r}
+cotinine <- c(362, 210, 400, 520, 360)
+range(cotinine)
+range_value = 520 - 210
+range_value
+
+```
+**Variance**
+The sample variance is the average of the squared differences of the individual data points from the mean. The formula for the sample variance (\( s^2 \)) is:
+
+\[
+s^2 = \frac{\sum (x - \bar{x})^2}{n-1}
+\]
+
+An alternative formula for finding the sample variance is:
+
+\[
+s^2 = \frac{n\sum x^2 - (\sum x)^2}{n(n-1)}
+\]
+
+The R command for finding the standard deviation is
+<span style="color:red">sd( )</span>
+
+**Example 2**
+Find the variance and standard deviation of these measured values of cotinine:
+- 362	210	400	520	360
+
+**Solution**
+```{r}
+cotinine <- c(362, 210, 400, 520, 360)
+var(cotinine)
+
+sd(cotinine)
+
+```
+**Coefficient of Variation**
+The coefficient of variation expresses the standard deviation relative to the mean. The formula for the coefficient of variation (\( V \)) is:
+
+\[
+V = \frac{s}{\bar{x}} \times 100
+\]
+
+Where:
+- \( s \): The standard deviation.
+- \( \bar{x} \): The mean.
+
+The R code for finding the coefficient of variation is
+<span style="color:red">(sd( ) / mean( )) * 100</span>
+Note that this only works when the mean value is positive, which is usually the only case when a coefficient of variation is defined.
+
+**Example 3**
+Use the data to determine range, variation, and standard deviation.
+**Solution**
+```{r}
+nicotine <- c(1.8, 1.7, 1.7, 1.6, 1.5, 1.4, 1.4, 1.3, 1.3, 1.2, 1.2, 1.1)
+range(nicotine)
+
+range_value <-1.8-1.1
+range_value
+
+var(nicotine)
+
+sd(nicotine)
+```
+## 3-3: Measures of Relative Standing and Boxplots
+
+This section discusses the measures of relative standing, which are numbers that show the location of data values relative to other values within the same data set. We will discuss z-scores, Percentiles, Quartiles, five-number summaries, and Boxplots.
+
+**z-Scores**
+
+The z-score, also known as the standard or standardized score, is the number of standard deviations that a given value x is away from the mean. The formulas for the z-scores of the sample and population are:
+
+### Sample Z-Score
+\[
+z = \frac{x - \bar{x}}{s}
+\]
+
+### Population Z-Score
+\[
+z = \frac{x - \mu}{\sigma}
+\]
+
+A z-score can be positive, negative, or zero. A negative z-score represents a score that is less than the mean, and a positive z-score represents a score that is greater than the mean. The z-score is zero when the score is equal to the mean.
+The R command for obtaining the z-scores of a vector of numbers is
+<span style="color:red">scale( )</span>
+To obtain the z-score for the nth term, type
+<span style="color:red">scale( )[n]</span>
+
+To clean things up and get a more legible output, you can use the command
+<span style="color:red">as.numeric( )</span>
+You can also compute the z-scores manually using the code
+<span style="color:red">(x -mean(x))/ sd(x)</span>
+
+**Example**
+Find the z-scores for the following data:
+- 112	141	118	132	121	116	133	110	126	138	
+
+**Solution**
+```{r}
+scores <- c(112, 141, 118, 132, 121,	116, 133, 110, 126, 138)
+z_scores<- scale(scores)
+z_scores1 <- as.numeric(z_scores) #This gives a cleaner output
+z_scores1
+
+```
+**Percentiles**
+Percentiles are measures of location, denoted by \( P_1, P_2, \dots, P_{99} \), that divide a set of data into 100 groups with about 1% of the values in each group.
+
+The percentile that corresponds to a data value \( x \) is given by the formula:
+
+\[
+\text{Percentile of value } x = \frac{\text{number of values less than } x}{\text{total number of values}} \times 100
+\]
+
+The R command is 
+<span style="color:red">quantile(x, probs= c(p_1, p_2, .., p_n )</span>
+where x is the numeric vector whose percentile we wish to find, and probs is a numeric vector of probabilities. 
+To find the percentile rank for a value x0 from a vector x, use the function
+<span style="color:red">(length(x[x <x0])/length(x))*100</span>
+
+To obtain percentile rank for all values in the vector, use the command
+<span style="color:red">(rank(x)-1)/length(x)</span>
+Note that this command will not necessarily produce the same percentiles as the quantile function. The quantile function will fill in the gaps when we don’t have an exact multiple of 100.
+
+**Example**
+The following data lists rounded cotinine measures (ng/ml) from 50 smokers randomly selected from Data Set 21 “Passive and Active Smoke”. These measures are arranged in increasing order. Find the percentile cotinine level of 250 ng/ml.
+
+- 23	37	67	69	77	82	101	103	128	151
+- 154	171	182	184	190	190	196	206	208	218
+- 243	250	254	263	269	278	284	286	292	296
+- 299	306	312	331	335	340	359	359	360	368
+- 369	381	388	403	407	479	508	529	600	662
+
+**Solution**
+```{r}
+Data1 <- c(23, 37, 67, 69, 77, 82, 101, 103, 128, 151, 154, 171, 182, 184, 190, 190, 
+             196, 206, 208, 218, 243, 250, 254, 263,269, 278, 284, 286, 292, 296, 299, 
+             306, 312, 331, 335, 340, 359, 359, 360, 368, 369, 381, 388, 403, 407, 
+             479, 508, 529, 600, 662)
+(length(Data1[Data1<250])/length(Data1))*100
+
+```
+
+Use the data in the Example to find the 25th percentile, \( P25\).
+**Solution**
+```{r}
+quantile(Data1, probs = 0.25)
+```
+
+**Quartiles**
+Quartiles are measures of location that divide a set of data into four groups with about 25% of the values in each group. The locations are denoted by \( Q_1, Q_2, \) and \( Q_3 \).
+
+Since the first, second, and third quartiles are the same as the 25th, 50th, and 75th percentiles respectively, we can use the R command for percentiles to find the quartiles. We can also use the command:
+
+<span style="color:red">quantile(data, probs = c(0.25, 0.5, 0.75))</span>
+
+The difference between the first and third quartiles, \( Q_3,- Q_1 \) is known as the interquartile range. The R command for the interquartile range is
+<span style="color:red">IQR( )</span>
+
+**Five-number summary**
+The values the minimum, first quartile, second quartile (or median), third quartile, and maximum constitute the five-number summary. The R command for finding the five-number summary is 
+<span style="color:red">fivenum( )</span>
+
+**Example**
+Use the cotinine measures in Data1 to find the 5-number summary.
+
+**Solution**
+```{r}
+fivenum(Data1)
+```
+**Boxplots**
+A boxplot or box-and-whisker plot is a graph of data that consists of a line extending from the point max(min(x), Q1 - (IQR(x)*1.5))  as the lower whisker to the point min(max(x), Q3 + (IQR(x)*1.5))  as the upper whisker,  and a line drawn at the first quartile, the second quartile (median), and the third quartile. 
+
+This is a visual representation of a boxplot, showing the key components such as the lower whisker, Q1, median, Q3, and the upper whisker:
+
+![Boxplot Diagram](boxplot.png)
+
+R command for the boxplot is 
+
+<span style="color:red">boxplot( )</span>
+
+**Example**
+Use the cotinine measurements listed in Data1 to construct a boxplot.
+
+**Solution**
+
+```{r}
+boxplot(Data1, horizontal = TRUE, main ="Boxplot of Cotinine Measurements")
+```
+
+## Summary of R Commands
+### <span style="color:red">R command</span>	Task
+
+- <span style="color:red">mean( )</span> 	Computes the arithmetic mean
+- <span style="color:red">median( )</span>	Computes the median
+- <span style="color:red">table( )</span>	Creates a frequency table
+- <span style="color:red">sort( table_name, decreasing = TRUE)[1]</span>	Sorts the frequency table in decreasing order and reports the mode
+- <span style="color:red">range( )</span>	Reports the max and min values. The mode can be found by subtracting the min value from the max value.
+- <span style="color:red">max( )</span> 	Reports the max value
+- <span style="color:red">min( )</span>	Reports the min value
+- <span style="color:red">var( )</span>	Computes the sample variance
+- <span style="color:red">sd( )</span>	Computes the sample standard deviation
+- <span style="color:red">(sd( ) / mean( )) * 100</span>	Computes the sample coefficient of variation
+- <span style="color:red">scale( )</span>	Computes the z-scores
+- <span style="color:red">as.numeric( )</span>	Converts to numeric values. Use this to obtain a cleaner output for the z-scores
+- <span style="color:red">(x -mean(x))/ sd(x)</span>	Computes the z-score
+- <span style="color:red">quartile( )</span>	Computes the quartiles
+- <span style="color:red">IQR( )</span>	Computes the interquartile range
+- <span style="color:red">fivenum( )</span>	Reports the five-number summary
+- <span style="color:red">boxplot( )</span>	Produces the boxplot
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

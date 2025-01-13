@@ -1,0 +1,166 @@
+---
+title: "Lab 5"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Chapter 8: Hypothesis Testing
+
+A hypothesis is a claim about a property of a population. A hypothesis test is a standard procedure for testing a claim about a postulation. It is also called a test of significance.
+
+## 8-2: Testing a Claim About a Proportion.
+
+The test statistic is 
+
+\[
+z = \frac{\hat{p} - p}{\sqrt{\frac{pq}{n}}}
+\]
+
+Where:
+- \( \hat{p} \): Sample proportion.
+- \( p \): Population proportion.
+- \( q = 1 - p \): Complement of the population proportion.
+- \( n \): Sample size.
+
+The following requirements must be met:
+1. The data come from a simple random sample.
+2. The conditions for a binomial distribution are satisfied. 
+3. np≥5  and nq≥5  
+
+The R command for testing the hypothesis about a population proportion is 
+
+<span style="color:red">prop.test(x, n, p, correct =, alternative = )</span>
+
+Note:
+- correct = TRUE uses a continuity correction factor
+- correct = FALSE does not use a continuity correction factor
+- alternate = "two.sided" (default)  or “greater” or “less”
+
+**Example 1**
+
+A study of sleepwalking or “nocturnal wandering” was described in Neurology magazine, and it included information that 29.2% of 19,136 American adults have sleepwalked. Would a reporter be justified in stating that “fewer than 30% of adults have sleepwalked”? Let’s use a 0.05 significance level to test the claim that for the adult population, the proportion of those who have sleepwalked is less than 0.30.
+
+**Solution**
+
+```{r}
+prop.test(0.292*19136, 19136, p = 0.3, alternative = "less" )
+```
+## 8-3: Testing Claims About a Mean when the population standard deviation is unknown
+
+The Test Statistic is 
+
+\[
+t = \frac{\bar{x} - \mu}{\frac{s}{\sqrt{n}}}
+\]
+
+Where:
+- \( \bar{x} \): Sample mean.
+- \( \mu \): Population mean.
+- \( s \): Sample standard deviation.
+- \( n \): Sample size.
+
+Requirements
+
+1.	The sample is a simple random sample
+2.	The population is normally distributed or n > 30
+
+The R command for testing the hypothesis about the mean when the population standard deviation is unknown is 
+
+<span style="color:red">t.test(x, mu = , alternative = )</span>
+
+Note:
+•	alternate = "two.sided" (default)  or “greater” or “less”
+
+**Example 1**
+
+Listed below are amounts of sleep (hours) for randomly selected adult subjects included in the National Health and Nutrition Examination Study. Here are the unrounded statistics for this sample: n = 12,   x = 6.83333333 hours, s = 1.99240984 hours. A common recommendation is that adults should sleep between 7 hours and 9 hours each night. Use the p-value method with a 0.05 significance level to test the claim that the mean amount of sleep for adults is less than 7 hours.
+
+- 4   8   4   4   8   6   9   7   7   10   7   8
+
+**Solution**
+
+```{r}
+data1 <- c(4, 8, 4, 4, 8, 6, 9, 7, 7, 10, 7, 8)
+ 
+t.test(data1, mu = 7, alternative = "less")
+```
+## Section 8.4: Testing a Claim About a Standard Deviation or Variance
+
+Test Statistic:
+
+\[
+\chi^2 = \frac{(n-1) s^2}{\sigma^2}
+\]
+
+Where:
+- \( \chi^2 \): Chi-square statistic.
+- \( n \): Sample size.
+- \( s^2 \): Sample variance.
+- \( \sigma^2 \): Population variance.
+
+The R command for the Chi Square statistic is given by
+
+<span style="color:red">Chi_sq <- ((n - 1) * sd_x^2)/sigma_x^2
+
+where sd_x and sigma_x are the mean and standard deviation respectively.
+The R command for the p-value associated with the Chi square statistic is given by
+
+<span style="color:red">pchisq(Chi_sq, n-1, lower.tail = TRUE)
+
+**Example 1**
+
+Listed below are pulse rates in beats per minute (bpm) for a simple random sample of females from Data Set 1 “Body Data” in Appendix B. Use a 0.05 significance level to test the claim that females have pulse rates with a standard deviation that is less than the value σ=11.3 bpm from the population of males.
+
+**Solution**
+```{r}
+Data1 <- c(76, 76, 86, 74, 66, 62, 78, 68, 62, 62, 74, 82, 54, 74, 74, 84, 60, 52, 84, 66, 56, 66, 84, 64)
+n <- length(Data1)
+sd_x <- sd(Data1)
+sigma_x <- 11.3
+Chi_sq <- ((n - 1) * sd_x^2)/sigma_x^2
+Chi_sq
+
+p_value <- pchisq(Chi_sq, n-1, lower.tail = TRUE)
+p_value
+```
+**Example 2**
+
+Repeat the hypothesis test in Example 1 by constructing a suitable confidence interval.
+
+**Solution**
+```{r}
+chisq_L <- qchisq(0.05, n-1, lower.tail = TRUE)
+chisq_L
+
+chisq_R <- qchisq(0.05, n-1, lower.tail = FALSE)
+chisq_R
+
+Lower <- sqrt((n-1)*sd_x^2/chisq_R)
+Lower
+
+Upper <- sqrt((n-1)*sd_x^2/chisq_L)
+Upper
+```
+
+## Summary of R Commands
+### <span style="color:red">R command</span>	Task
+
+- <span style="color:red">prop.test(x, n, p, correct =, 
+alternative = )</span>
+	Tests the hypothesis about a population proportion
+- <span style="color:red">t.test(x, mu = , alternative = )</span>
+	Tests the hypothesis about the mean when the population standard deviation is unknown
+- <span style="color:red">Chi_sq <- ((n - 1) * sd_x^2)/sigma_x^2</span>
+	Computes the chi square statistic
+- <span style="color:red">pchisq(Chi_sq, n-1, lower.tail = TRUE)</span>
+	Computes the p-value associated with the Chi square statistic
+
+
+
+
+
+
+
